@@ -6,4 +6,6 @@ public class FireStation {
 
     private int stationNumber;
     private List<Person> person;
+
+
 }
