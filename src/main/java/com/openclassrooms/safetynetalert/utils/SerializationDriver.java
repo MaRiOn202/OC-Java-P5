@@ -36,5 +36,5 @@ public class SerializationDriver {
 
         return safetyAlert;
     }
-   
+    
 }

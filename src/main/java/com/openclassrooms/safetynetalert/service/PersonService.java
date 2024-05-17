@@ -2,7 +2,6 @@ package com.openclassrooms.safetynetalert.service;
 
 import com.openclassrooms.safetynetalert.model.Person;
 import com.openclassrooms.safetynetalert.repository.PersonRepository;
-import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,7 @@ public class PersonService {
 
 
     
+
 
 
 

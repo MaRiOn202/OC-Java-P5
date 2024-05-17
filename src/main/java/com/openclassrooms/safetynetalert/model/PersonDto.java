@@ -3,7 +3,7 @@ package com.openclassrooms.safetynetalert.model;
 
 import lombok.*;
 
-import java.util.List;
+
 
 @Getter
 @Setter
@@ -21,6 +21,5 @@ public class PersonDto {
     private String phone;
 
 
-    
 
 }
