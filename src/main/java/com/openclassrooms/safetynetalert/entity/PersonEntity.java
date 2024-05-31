@@ -1,4 +1,4 @@
-package com.openclassrooms.safetynetalert.model;
+package com.openclassrooms.safetynetalert.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 @ToString
-public class Person implements Serializable {
+public class PersonEntity implements Serializable {
 
 /*    @Serial
     private static final long serialVersionUID = 1L;*/
@@ -23,7 +23,7 @@ public class Person implements Serializable {
         private String phone;
         private String email;
 
-    public Person(String firstName, String lastName, String address, String city, String zip, String phone, String email) {
+    public PersonEntity(String firstName, String lastName, String address, String city, String zip, String phone, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -33,10 +33,10 @@ public class Person implements Serializable {
         this.email = email;
 
     }
-    public Person() {
+    public PersonEntity() {
     }
 
-    public Person(String firstName, String lastName) {
+    public PersonEntity(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }

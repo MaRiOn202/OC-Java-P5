@@ -9,17 +9,13 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class ChildDto {
+public class ChildModel {
 
      private String firstName;
      private String lastName;
-     private String Birthdate;
-     List<String> members;
-     
+     private long age;
 
-
-
-
+     private List<PersonModel> membersFamily;
 
 
 }

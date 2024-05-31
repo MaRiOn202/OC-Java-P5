@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalert.repository;
 
-import com.openclassrooms.safetynetalert.model.Person;
+import com.openclassrooms.safetynetalert.entity.PersonEntity;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public class PersonRepository {
 
-    private List<Person> listPerson = new ArrayList<>();
+    private List<PersonEntity> listPerson = new ArrayList<>();
 
     public PersonRepository( SerializationDriver serializationDriver) {
         this.serializationDriver = serializationDriver;
@@ -19,18 +19,19 @@ public class PersonRepository {
 
     public final SerializationDriver serializationDriver;
 
-    public List<Person> getPersonList() {
+    public List<PersonEntity> getPersonList() {
+
         return serializationDriver.safetyAlert.getPersons();
     }
 
-    public void addPerson(Person person) {
+    public void addPerson(PersonEntity person) {
 
         this.listPerson.add(person);
     }
 
-    public Person findByLastNameAndFirstName(String lastName, String firstName) {
+    public PersonEntity findByLastNameAndFirstName(String lastName, String firstName) {
         listPerson = getPersonList();
-        for (Person person : listPerson) {
+        for (PersonEntity person : listPerson) {
             if (person.getLastName().equals(lastName) &&
                     person.getFirstName().equals(firstName))
                 return person;
@@ -38,10 +39,11 @@ public class PersonRepository {
         return null;     //optional.empty
     }
 
-    public List<Person> findByAddress(String address) {
-        List<Person> personResult = new ArrayList<>();
+    
+    public List<PersonEntity> findByAddress(String address) {
+        List<PersonEntity> personResult = new ArrayList<>();
         listPerson = getPersonList();
-        for (Person person : listPerson) {
+        for (PersonEntity person : listPerson) {
             if (person.getAddress().equals(address))
                 personResult.add(person);
             }
@@ -51,7 +53,7 @@ public class PersonRepository {
 
     public Boolean removePerson(String lastName, String firstName) {
         listPerson = getPersonList();
-        for (Person person : listPerson) {
+        for (PersonEntity person : listPerson) {
             if (person.getLastName().equals(lastName) &&
                     person.getFirstName().equals(firstName))
                 return listPerson.remove(person);    //true

@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalert.repository;
 
-import com.openclassrooms.safetynetalert.model.MedicalRecord;
+import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class MedicalRecordRepositoryTest {
 
     Logger log = LoggerFactory.getLogger(PersonRepository.class);
 
-    private MedicalRecord medicalRecord;
+    private MedicalRecordEntity medicalRecord;
 
 
     @BeforeEach
@@ -36,12 +36,12 @@ public class MedicalRecordRepositoryTest {
     @Test
     void testMedicalRecordRepositoryAddMedicalRecord() {
 
-        MedicalRecord medicalRecord = new MedicalRecord();
+        MedicalRecordEntity medicalRecord = new MedicalRecordEntity();
         medicalRecord.setFirstName("Toto");
         medicalRecord.setLastName("Tata");
         medicalRecord.setBirthdate("21/07/1989");
         
-        List<MedicalRecord> listMedicalRecord = medicalRecordRepository.getMedicalRecordList();
+        List<MedicalRecordEntity> listMedicalRecord = medicalRecordRepository.getMedicalRecordList();
         List<String> medications = Arrays.asList("CellCept:350mg", "TITI:100mg");
         medicalRecord.setMedications(medications);
         medicalRecordRepository.addMedicalRecord(medicalRecord);
@@ -58,7 +58,7 @@ public class MedicalRecordRepositoryTest {
     void testMedicalRecordRepositoryRemoveMedicalRecord() {
 
        Boolean result = medicalRecordRepository.removeMedicalRecord("John", "Boyd" );
-       List<MedicalRecord> listMedicalRecord = medicalRecordRepository.getMedicalRecordList();
+       List<MedicalRecordEntity> listMedicalRecord = medicalRecordRepository.getMedicalRecordList();
        log.info("Résultat : {} {}", result, listMedicalRecord);
 
        assertTrue(result, "Le test a échoué");

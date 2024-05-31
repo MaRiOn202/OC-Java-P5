@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalert.repository;
 
-import com.openclassrooms.safetynetalert.model.Person;
+import com.openclassrooms.safetynetalert.entity.PersonEntity;
 
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ public class PersonRepositoryTest {
     PersonRepository personRepository;
 
     Logger log = LoggerFactory.getLogger(PersonRepository.class);
-    private Person person;
+    private PersonEntity person;
 
     @BeforeEach
     void init() throws IOException {
@@ -37,11 +37,11 @@ public class PersonRepositoryTest {
     @Test
     void testPersonRepositoryAddPerson() {
 
-        Person person = new Person();
+        PersonEntity person = new PersonEntity();
         person.setLastName("toto");
         person.setFirstName("tata");
         personRepository.addPerson(person);
-        List<Person> listPerson = personRepository.getPersonList();
+        List<PersonEntity> listPerson = personRepository.getPersonList();
         log.info("Résultat : {}", listPerson);
 
         assertNotNull(listPerson);
@@ -54,7 +54,7 @@ public class PersonRepositoryTest {
 
         Boolean result = personRepository.removePerson("Boyd",
                 "John");
-        List<Person> listPerson = personRepository.getPersonList();
+        List<PersonEntity> listPerson = personRepository.getPersonList();
         log.info("Résultat : {} {}", result, listPerson);
 
         assertTrue(result, "Le test a échoué");
@@ -76,8 +76,8 @@ public class PersonRepositoryTest {
     @Test
     void testPersonRepositoryFindByAddress() {
 
-        List<Person> result = personRepository.findByAddress("1509 Culver St");
-        List<Person> listPerson = personRepository.findByAddress("1509 Culver St");
+        List<PersonEntity> result = personRepository.findByAddress("1509 Culver St");
+        List<PersonEntity> listPerson = personRepository.findByAddress("1509 Culver St");
         log.info("Résultat : {} {}", listPerson, result);
 
         assertEquals("1509 Culver St", listPerson.get(0).getAddress());

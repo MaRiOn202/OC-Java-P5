@@ -1,7 +1,7 @@
 package com.openclassrooms.safetynetalert.repository;
 
 
-import com.openclassrooms.safetynetalert.model.FireStation;
+import com.openclassrooms.safetynetalert.entity.FireStationEntity;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ public class FireStationRepositoryTest {
 
     FireStationRepository fireStationRepository;
 
-    private FireStation fireStation;
+    private FireStationEntity fireStation;
     Logger log = LoggerFactory.getLogger(PersonRepository.class);
 
     @BeforeEach
@@ -31,10 +31,10 @@ public class FireStationRepositoryTest {
 
     @Test
     void testFireStationRepositoryAddFireStation() {
-        FireStation fireStation = new FireStation();
+        FireStationEntity fireStation = new FireStationEntity();
         fireStation.setStation("5");
         fireStationRepository.addFireStation(fireStation);
-        List<FireStation> listFireStation = fireStationRepository.getFireStationList();
+        List<FireStationEntity> listFireStation = fireStationRepository.getFireStationList();
         log.info("Résultat : {}", listFireStation);
 
         assertNotNull(listFireStation);
@@ -47,7 +47,7 @@ public class FireStationRepositoryTest {
     void testFireStationRepositoryRemoveFireStation() {
 
       Boolean result = fireStationRepository.removeFireStation("1509 Culver St");
-      List<FireStation> listFireStation = fireStationRepository.getFireStationList();
+      List<FireStationEntity> listFireStation = fireStationRepository.getFireStationList();
       log.info("Résultat : {} {}", result, listFireStation);
 
       assertTrue(result, "Le test a échoué");
@@ -57,8 +57,8 @@ public class FireStationRepositoryTest {
 
     @Test
     void testFireStationRepositoryFindByStation() {
-        List<FireStation> fireStationResult = fireStationRepository.findByStation("3");
-        List<FireStation> listFireStation = fireStationRepository.findByStation("3");
+        List<FireStationEntity> fireStationResult = fireStationRepository.findByStation("3");
+        List<FireStationEntity> listFireStation = fireStationRepository.findByStation("3");
         log.info("Résultat : {} {}", listFireStation, fireStationResult);
 
         assertEquals("3", listFireStation.get(0).getStation());

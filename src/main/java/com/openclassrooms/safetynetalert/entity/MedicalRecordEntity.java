@@ -1,4 +1,5 @@
-package com.openclassrooms.safetynetalert.model;
+package com.openclassrooms.safetynetalert.entity;
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class MedicalRecord {
+public class MedicalRecordEntity {
 
     private String firstName;
     private String lastName;
@@ -20,7 +21,7 @@ public class MedicalRecord {
     private List<String> allergies;
 
 
-    public MedicalRecord(String firstName, String lastName, String birthdate, List<String> medications, List<String> allergies) {
+    public MedicalRecordEntity(String firstName, String lastName, String birthdate, List<String> medications, List<String> allergies) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
@@ -28,8 +29,8 @@ public class MedicalRecord {
         this.allergies = allergies;
     }
 
-    public MedicalRecord() {
-        
+    public MedicalRecordEntity() {
+
     }
 
 }

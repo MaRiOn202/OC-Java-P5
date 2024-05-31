@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalert.repository;
 
-import com.openclassrooms.safetynetalert.model.FireStation;
+import com.openclassrooms.safetynetalert.entity.FireStationEntity;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,7 +14,7 @@ public class FireStationRepository {
     @Autowired
     public SerializationDriver serializationDriver;
 
-    public List<FireStation> listFireStation = new ArrayList<>();
+    public List<FireStationEntity> listFireStation = new ArrayList<>();
 
     public FireStationRepository( SerializationDriver serializationDriver) {
         this.serializationDriver = serializationDriver;
@@ -22,29 +22,29 @@ public class FireStationRepository {
     }
 
 
-    public List<FireStation> getFireStationList() {
+    public List<FireStationEntity> getFireStationList() {
 
         return serializationDriver.safetyAlert.getFireStations();
     }
 
-    public void addFireStation(FireStation fireStation) {
+    public void addFireStation(FireStationEntity fireStation) {
 
         this.listFireStation.add(fireStation);
     }
 
-    public List<FireStation> findByStation(String station) {
-        List<FireStation> fireStationResult = new ArrayList<>();
+    public List<FireStationEntity> findByStation(String station) {
+        List<FireStationEntity> fireStationResult = new ArrayList<>();
         listFireStation = getFireStationList();
-        for (FireStation fireStation : listFireStation) {
+        for (FireStationEntity fireStation : listFireStation) {
             if (fireStation.getStation().equals(station))
                 fireStationResult.add(fireStation);
         }
         return fireStationResult;
     }
 
-    public FireStation findByAddress(String address) {
+    public FireStationEntity findByAddress(String address) {
         listFireStation = getFireStationList();
-        for (FireStation fireStation : listFireStation) {
+        for (FireStationEntity fireStation : listFireStation) {
             if (fireStation.getAddress().equals(address))
                 return fireStation;
         }
@@ -74,7 +74,7 @@ public class FireStationRepository {
 
     public Boolean removeFireStation(String address) {
         listFireStation = getFireStationList();
-        for (FireStation fireStation : listFireStation) {
+        for (FireStationEntity fireStation : listFireStation) {
             if (fireStation.getAddress().equals(address))
                 return listFireStation.remove(fireStation);   //True
         }

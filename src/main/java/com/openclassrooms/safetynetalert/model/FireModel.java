@@ -1,17 +1,19 @@
 package com.openclassrooms.safetynetalert.model;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
 
-@Getter
 @Setter
+@Getter
 @ToString
-public class PersonFireStation {
+public class FireModel {
 
-    List<PersonDto> members;
-    private Long nbreAdult;       //+ 18 ans
-    private Long nbreEnfant;      //- 18 ans
+    private List<FireMembersModel> fireMembersModels;
+    private int station; 
+
+
 }
