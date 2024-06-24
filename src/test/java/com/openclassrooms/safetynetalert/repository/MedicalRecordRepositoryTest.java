@@ -5,6 +5,7 @@ import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
@@ -20,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class MedicalRecordRepositoryTest {
 
-    MedicalRecordRepository medicalRecordRepository;
+    //@InjectMocks
+    private MedicalRecordRepository medicalRecordRepository;
 
     Logger log = LoggerFactory.getLogger(PersonRepository.class);
 
@@ -57,7 +59,7 @@ public class MedicalRecordRepositoryTest {
     @Test
     void testMedicalRecordRepositoryRemoveMedicalRecord() {
 
-       Boolean result = medicalRecordRepository.removeMedicalRecord("John", "Boyd" );
+       Boolean result = medicalRecordRepository.deleteMedicalRecord("John", "Boyd" );
        List<MedicalRecordEntity> listMedicalRecord = medicalRecordRepository.getMedicalRecordList();
        log.info("Résultat : {} {}", result, listMedicalRecord);
 

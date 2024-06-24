@@ -23,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PersonRepositoryTest {
 
    // @Autowired
-    PersonRepository personRepository;
+    //@InjectMocks
+    private PersonRepository personRepository;
 
     Logger log = LoggerFactory.getLogger(PersonRepository.class);
     private PersonEntity person;
@@ -46,13 +47,14 @@ public class PersonRepositoryTest {
 
         assertNotNull(listPerson);
         assertTrue(listPerson.stream().anyMatch(person1 ->
-                person1.getLastName().equalsIgnoreCase("toto")), "Le test a échoué");
+                person1.getLastName().equalsIgnoreCase("toto")),
+                "Le test a échoué");
     }
 
     @Test
     void testPersonRepositoryRemovePerson() {
 
-        Boolean result = personRepository.removePerson("Boyd",
+        Boolean result = personRepository.deletePerson("Boyd",
                 "John");
         List<PersonEntity> listPerson = personRepository.getPersonList();
         log.info("Résultat : {} {}", result, listPerson);

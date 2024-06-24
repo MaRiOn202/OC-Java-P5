@@ -40,7 +40,9 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
  //  public MedicalRecord findAll() {
 
 
-
+    public Boolean deleteMedicalRecord(String lastName, String firstName) {
+        return medicalRecordRepository.deleteMedicalRecord(lastName, firstName);
+    }
 
 /*    public MedicalRecordEntity removeMedicalRecord(MedicalRecordEntity medicalRecord) {
         return medicalRecordRepository.removeMedicalRecord(medicalRecord);

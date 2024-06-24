@@ -51,7 +51,7 @@ public class MedicalRecordRepository {
        return new MedicalRecord();
     }*/
 
-    public Boolean removeMedicalRecord(String lastName, String firstName) {
+    public Boolean deleteMedicalRecord(String lastName, String firstName) {
         listMedicalRecord = getMedicalRecordList();
         for ( MedicalRecordEntity medicalRecord : listMedicalRecord) {
            if (medicalRecord.getLastName().equals(lastName) &&

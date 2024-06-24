@@ -1,7 +1,7 @@
 package com.openclassrooms.safetynetalert.entity;
 
 
-import com.openclassrooms.safetynetalert.model.MedicalRecord;
+import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

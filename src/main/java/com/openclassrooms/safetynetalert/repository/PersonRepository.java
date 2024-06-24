@@ -24,10 +24,12 @@ public class PersonRepository {
         return serializationDriver.safetyAlert.getPersons();
     }
 
-    public void addPerson(PersonEntity person) {
+    public PersonEntity addPerson(PersonEntity personEntity) {
 
-        this.listPerson.add(person);
+        this.listPerson.add(personEntity);
+        return personEntity;
     }
+    
 
     public PersonEntity findByLastNameAndFirstName(String lastName, String firstName) {
         listPerson = getPersonList();
@@ -51,7 +53,7 @@ public class PersonRepository {
         }
 
 
-    public Boolean removePerson(String lastName, String firstName) {
+    public Boolean deletePerson(String lastName, String firstName) {
         listPerson = getPersonList();
         for (PersonEntity person : listPerson) {
             if (person.getLastName().equals(lastName) &&

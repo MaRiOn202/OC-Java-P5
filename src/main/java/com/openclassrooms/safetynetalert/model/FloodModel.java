@@ -11,16 +11,11 @@ import java.util.List;
 @Getter
 @ToString
 @AllArgsConstructor
-public class ChildModel {
+public class FloodModel {
 
-     private String firstName;
-     private String lastName;
-     private long age;
-
-     private List<PersonModel> membersFamily;
-
-
-    public ChildModel() {
+    private List<FamilyWithoutChildModel> famille;
+    
+    public FloodModel() {
 
     }
 }

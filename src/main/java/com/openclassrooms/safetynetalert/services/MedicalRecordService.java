@@ -14,7 +14,7 @@ public interface MedicalRecordService {
 
     public MedicalRecordEntity findByLastNameAndFirstName(String lastName, String firstName);
 
-
+    public Boolean deleteMedicalRecord(String lastName, String firstName);
 
 
 }

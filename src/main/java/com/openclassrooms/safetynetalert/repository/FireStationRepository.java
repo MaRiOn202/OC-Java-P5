@@ -22,14 +22,18 @@ public class FireStationRepository {
     }
 
 
+    /**
+     *   Récupère l'ensemble des données des fireStations du fichier json
+     *   @ return une liste des fireStations du json
+     */
     public List<FireStationEntity> getFireStationList() {
-
         return serializationDriver.safetyAlert.getFireStations();
     }
 
-    public void addFireStation(FireStationEntity fireStation) {
+    public FireStationEntity addFireStation(FireStationEntity fireStationEntity) {
 
-        this.listFireStation.add(fireStation);
+        this.listFireStation.add(fireStationEntity);
+        return fireStationEntity;
     }
 
     public List<FireStationEntity> findByStation(String station) {
@@ -72,7 +76,7 @@ public class FireStationRepository {
         return null;
     }*/
 
-    public Boolean removeFireStation(String address) {
+    public Boolean deleteFireStation(String address) {
         listFireStation = getFireStationList();
         for (FireStationEntity fireStation : listFireStation) {
             if (fireStation.getAddress().equals(address))
@@ -81,6 +85,9 @@ public class FireStationRepository {
         return false;
 
     }
+  /*  public void deleteFireStation(FireStationEntity fireStation) {
+         this.listFireStation.remove(fireStation);
+    }*/
 
 
 }

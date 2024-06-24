@@ -11,16 +11,9 @@ import java.util.List;
 @Getter
 @ToString
 @AllArgsConstructor
-public class ChildModel {
-
-     private String firstName;
-     private String lastName;
-     private long age;
-
-     private List<PersonModel> membersFamily;
+public class FamilyWithoutChildModel {
 
 
-    public ChildModel() {
+    List<PersonInfoModel> family;
 
-    }
 }

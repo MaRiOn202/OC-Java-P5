@@ -6,6 +6,7 @@ import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class FireStationRepositoryTest {
 
-    FireStationRepository fireStationRepository;
+    //@InjectMocks
+    private FireStationRepository fireStationRepository;
 
-    private FireStationEntity fireStation;
     Logger log = LoggerFactory.getLogger(PersonRepository.class);
 
     @BeforeEach
@@ -46,7 +47,7 @@ public class FireStationRepositoryTest {
     @Test
     void testFireStationRepositoryRemoveFireStation() {
 
-      Boolean result = fireStationRepository.removeFireStation("1509 Culver St");
+      Boolean result = fireStationRepository.deleteFireStation("1509 Culver St");
       List<FireStationEntity> listFireStation = fireStationRepository.getFireStationList();
       log.info("Résultat : {} {}", result, listFireStation);
 
@@ -68,7 +69,7 @@ public class FireStationRepositoryTest {
     @Test
     void testFireStationRepositoryFindByAddress() {
 
-        fireStation = fireStationRepository.findByAddress("1509 Culver St");
+        FireStationEntity fireStation = fireStationRepository.findByAddress("1509 Culver St");
         log.info("Résultat : {}", fireStation);
 
         assertEquals("1509 Culver St", fireStation.getAddress());
