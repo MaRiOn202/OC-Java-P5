@@ -38,7 +38,7 @@ public class MedicalRecordRepository {
                    medicalRecord.getFirstName().equals(firstName))
                return medicalRecord;
        }
-       return null;               //optional.empty
+       return null;               //optional.empty https://medium.com/@JeremieGottero/optional-en-java-quand-lutiliser-et-quand-ne-pas-l-utiliser-9bc759e162cd 
     }
 
 

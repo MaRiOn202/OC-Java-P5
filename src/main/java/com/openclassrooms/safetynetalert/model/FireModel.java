@@ -1,10 +1,7 @@
 package com.openclassrooms.safetynetalert.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,13 +9,11 @@ import java.util.List;
 @Getter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class FireModel {
 
     private List<FireMembersModel> fireMembersModels;
     private String station;
 
 
-    public FireModel() {
-
-    }
 }

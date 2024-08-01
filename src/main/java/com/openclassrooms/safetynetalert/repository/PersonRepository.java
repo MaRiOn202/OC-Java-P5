@@ -1,6 +1,7 @@
 package com.openclassrooms.safetynetalert.repository;
 
 import com.openclassrooms.safetynetalert.entity.PersonEntity;
+import com.openclassrooms.safetynetalert.model.ChildModel;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.springframework.stereotype.Repository;
 
@@ -20,12 +21,10 @@ public class PersonRepository {
     public final SerializationDriver serializationDriver;
 
     public List<PersonEntity> getPersonList() {
-
         return serializationDriver.safetyAlert.getPersons();
     }
 
     public PersonEntity addPerson(PersonEntity personEntity) {
-
         this.listPerson.add(personEntity);
         return personEntity;
     }
@@ -41,15 +40,26 @@ public class PersonRepository {
         return null;     //optional.empty
     }
 
+    public List<PersonEntity> findByLastNameAndFirstNameList(String lastName, String firstName) {
+        List<PersonEntity> personEntity = new ArrayList<>();
+        listPerson = getPersonList();
+        for (PersonEntity person : listPerson) {
+            if (person.getLastName().equals(lastName) &&
+                    person.getFirstName().equals(firstName))
+                return personEntity;
+        }
+        return null;     //optional.empty
+    }
+
     
     public List<PersonEntity> findByAddress(String address) {
-        List<PersonEntity> personResult = new ArrayList<>();
+        List<PersonEntity> personEntity = new ArrayList<>();
         listPerson = getPersonList();
         for (PersonEntity person : listPerson) {
             if (person.getAddress().equals(address))
-                personResult.add(person);
+                personEntity.add(person);
             }
-            return personResult;
+            return personEntity;
         }
 
 
@@ -62,10 +72,7 @@ public class PersonRepository {
         }
         return false;
     }
-
-/*    public List<Person> getAllPerson() {
-        return this.listPerson;
-    }*/
+    
 
 }
 /*    public Person findAll(String firstName, String lastName, String address, String city,

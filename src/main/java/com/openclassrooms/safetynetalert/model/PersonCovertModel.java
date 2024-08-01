@@ -2,22 +2,15 @@ package com.openclassrooms.safetynetalert.model;
 
 import lombok.*;
 
-import java.util.List;
-
-@Setter
 @Getter
+@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonInfoModel {
+public class PersonCovertModel {
 
     private String firstName;
     private String lastName;
+    private String phone;
     private String address;
-    private long age;
-    private String email;
-    private List<String> medications;
-    private List<String> allergies;
-
-   
 }

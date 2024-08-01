@@ -1,10 +1,11 @@
 package com.openclassrooms.safetynetalert.controller;
 
 import com.openclassrooms.safetynetalert.entity.FireStationEntity;
-import com.openclassrooms.safetynetalert.entity.PersonEntity;
 import com.openclassrooms.safetynetalert.model.FireModel;
 import com.openclassrooms.safetynetalert.model.FireStationModel;
+import com.openclassrooms.safetynetalert.model.PersonFireStationModel;
 import com.openclassrooms.safetynetalert.services.FireStationService;
+import com.openclassrooms.safetynetalert.services.PersonService;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -19,48 +20,39 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/firestation")
 public class FireStationController {
 
 
     @Autowired
-    private FireStationService fireStationService;
+    private final FireStationService fireStationService;
+
+    @Autowired
+    private final PersonService personService;
 
     private static final Logger log = LoggerFactory.getLogger(FireStationController.class);
 
 
-/*    @PostMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<FireStationModel> addFireStation(@NotNull @RequestBody FireStationModel fireStationModel) {
-        this.fireStationService.addFireStation(fireStationModel);
-        return ResponseEntity.status(HttpStatus.OK)
+    @PostMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
+    public FireStationModel addFireStation(@NotNull @RequestBody FireStationModel fireStationModel) {
+        //this.fireStationService.addFireStation(fireStationModel);
+        return fireStationService.addFireStation(fireStationModel);
+/*        return ResponseEntity.status(HttpStatus.OK)
                 .body("La station n°"+ fireStationModel.getStation()
                 + " située au "
-                + fireStationModel.getAddress() + " a bien été créée. " );
-
-                //   FireStationModel n'est pas encore créee besoin
-                //pour addFireStation
-    }*/
-
-
-    @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<List<FireStationEntity>> findByStation(
-            @RequestParam(name = "station", required = true)
-                                                                     String station) {
-        log.info("URL : http://localhost:8080/firestation?station");
-        return ResponseEntity.status(HttpStatus.OK).body(fireStationService
-                .findByStation(station));
-
+                + fireStationModel.getAddress() + " a bien été créée. " );*/
     }
 
-    @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<FireStationEntity> findByAddress(@RequestParam(name = "address", required = true)
-                                                                 String address) {
-        log.info("URL : http://localhost:8080/firestation?address");
-        return ResponseEntity.status(HttpStatus.OK).body((FireStationEntity) fireStationService
-                .findByStation(address));
+     @PutMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
+     public FireStationModel updateFireStation(@NotNull
+             @RequestParam(name = "address", required = true) String address) {
+             ///
+        return fireStationService.updateFireStation(address);
+     }
 
-    }    //cast ?
 
-    @DeleteMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
+
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<String> deleteFireStation(@RequestParam(name = "address", required = true) String address) {
 
         log.info("URL : http://localhost:8080/firestation?address");
@@ -71,21 +63,26 @@ public class FireStationController {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-    @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<List<String>> getPhoneAlert(@NotNull @RequestParam (name = "stationNumber",
-            required = true) String stationNumber) {
+     @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
+     public PersonFireStationModel getPersonCovertByFireStation(@RequestParam(name = "stationNumber")
+                                                                  String stationNumber) {
+         return fireStationService.getPersonCovertByFireStation(stationNumber);
+     }
 
+    @GetMapping(value = "/phoneAlert", produces = MediaType.APPLICATION_JSON_VALUE )
+    public List<String> getPhoneAlert(@NotNull @RequestParam (name = "stationNumber",
+            required = true) String stationNumber) {
         log.info("URL : http://localhost:8080/phoneAlert?firestation"+stationNumber);
-        return ResponseEntity.status(HttpStatus.OK).body(fireStationService.getPhoneAlert(stationNumber));
+        return fireStationService.getPhoneAlert(stationNumber);
     }
 
-
-    @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<FireModel> getFireMembersAddress(@NotNull @RequestParam (name = "address",
+    //  URL n°4
+    @GetMapping(value = "/fire", produces = MediaType.APPLICATION_JSON_VALUE )
+    public FireModel getFireMembersAddress(@NotNull @RequestParam (name = "address",
             required = true) String address) {
 
         log.info("URL : http://localhost:8080/fire?address="+address);
-        return ResponseEntity.status(HttpStatus.OK).body(fireStationService.getFireMembersAddress(address));
+        return fireStationService.getFireMembersAddress(address);
     }
 
 }

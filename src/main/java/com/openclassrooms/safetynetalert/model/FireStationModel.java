@@ -1,20 +1,23 @@
 package com.openclassrooms.safetynetalert.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 
 @Setter
 @Getter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class FireStationModel {
 
-    private String address;
-    private String station;
+        private String station;
+        private String address;
 
-    public FireStationModel() {
 
-    }
+
 }
+
+
+
+
+

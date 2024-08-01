@@ -1,9 +1,6 @@
 package com.openclassrooms.safetynetalert.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,13 +8,12 @@ import java.util.List;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class PersonFireStationModel {
 
-    private List<PersonModel> members;
+    private List<PersonCovertModel> members;
     private Long nbreAdult;       //+ 18 ans
     private Long nbreEnfant;      //- 18 ans
 
-    public PersonFireStationModel() {
 
-    }
 }

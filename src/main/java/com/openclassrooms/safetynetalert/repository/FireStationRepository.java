@@ -31,7 +31,6 @@ public class FireStationRepository {
     }
 
     public FireStationEntity addFireStation(FireStationEntity fireStationEntity) {
-
         this.listFireStation.add(fireStationEntity);
         return fireStationEntity;
     }

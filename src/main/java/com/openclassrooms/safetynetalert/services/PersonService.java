@@ -14,27 +14,34 @@ import java.util.Map;
 
 public interface PersonService {
 
-    public List<PersonEntity> getPersonList();
+    //List<PersonModel> getPersonList();
     
-    public void addPerson(PersonModel person);
+    PersonModel addPerson(PersonModel personModel);
 
-    public PersonEntity findByLastNameAndFirstName(String lastName, String firstName);
+    PersonModel updatePerson(String lastName, String firstName, PersonModel personModel);
 
-    public List<PersonEntity> findByAddress(String address);
+//    PersonModel findByLastNameAndFirstName(String lastName, String firstName);
 
-    public Boolean deletePerson(String lastName, String firstName);
+ //   List<PersonModel> findByAddress(String address);
 
+    Boolean deletePerson(String lastName, String firstName);
 
-    public List<ChildModel> getChildAlert(String address);
+    //URL n°2 :
+    List<ChildModel> getChildAlert(String address);
 
-    public FloodModel getFlood(List<String> stations);
+    // URL n°5
+    FloodModel getFlood(List<String> stations);
 
-    public List<PersonInfoModel> getPersonInfo(String firstName, String lastName);
+    // URL n°6
+    List<PersonInfoModel> getPersonInfo(String firstName, String lastName);
 
     // Spécificité de cette méthode ?
-    PersonEntity getPersonEntityWithMedicalRecord(MedicalRecordEntity medicalRecordEntity, @NotNull List<PersonEntity> listPersonEntity);
+    //PersonEntity getPersonEntityWithMedicalRecord(MedicalRecordEntity medicalRecordEntity, @NotNull List<PersonEntity> listPersonEntity);
 
-    public List<String> getCommunityEmail(String city);
+    //URL n°7 :
+    List<String> getCommunityEmail(String city);
+
+
 }
 
 

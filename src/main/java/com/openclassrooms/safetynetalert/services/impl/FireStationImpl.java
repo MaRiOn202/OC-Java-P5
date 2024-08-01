@@ -3,13 +3,17 @@ package com.openclassrooms.safetynetalert.services.impl;
 import com.openclassrooms.safetynetalert.entity.FireStationEntity;
 import com.openclassrooms.safetynetalert.entity.PersonEntity;
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
+import com.openclassrooms.safetynetalert.mapper.FireStationMapper;
+import com.openclassrooms.safetynetalert.mapper.PersonMapper;
 import com.openclassrooms.safetynetalert.model.*;
 import com.openclassrooms.safetynetalert.repository.FireStationRepository;
+import com.openclassrooms.safetynetalert.repository.MedicalRecordRepository;
+import com.openclassrooms.safetynetalert.repository.PersonRepository;
 import com.openclassrooms.safetynetalert.services.FireStationService;
-import com.openclassrooms.safetynetalert.services.MedicalRecordService;
-import com.openclassrooms.safetynetalert.services.PersonService;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.openclassrooms.safetynetalert.utils.AgeUtils;
@@ -25,22 +29,43 @@ public class FireStationImpl implements FireStationService {
     public SerializationDriver serializationDriver;
 
     @Autowired
-    private FireStationService fireStationService;
-
-    @Autowired
-    private PersonService personService;
-
-    @Autowired
-    private MedicalRecordService medicalRecordService;
-
-    @Autowired
     private FireStationRepository fireStationRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private MedicalRecordRepository medicalRecordRepository;
 
     @Autowired
     private AgeUtils age;
 
-    public List<FireStationEntity> listFireStation;
-    public List<PersonEntity> listPerson;
+    @Autowired
+    private PersonMapper personMapper;
+
+    @Autowired
+    private FireStationMapper fireStationMapper;
+
+    private static final Logger log = LoggerFactory.getLogger(FireStationImpl.class);
+
+    @Override
+    public FireStationModel addFireStation(FireStationModel fireStationM) {
+
+        FireStationEntity fireStationEntity = new FireStationEntity();
+        fireStationEntity.setAddress(fireStationM.getAddress());
+        fireStationEntity.setStation(fireStationM.getStation());      //model en entity
+
+        FireStationEntity fse = fireStationRepository.addFireStation(fireStationEntity);
+        FireStationModel fireStationModel = new FireStationModel();
+        fireStationModel.setAddress(fse.getAddress());
+        fireStationModel.setStation(fse.getStation());
+        return fireStationModel;
+    }
+
+    @Override
+    public FireStationModel updateFireStation(String address) {
+        return null;
+    }
 
     /**
      *   Renvoie la liste des personnes couvertes par la caserne de pompier
@@ -56,22 +81,22 @@ public class FireStationImpl implements FireStationService {
         long numberOfAdult;
         long numberOfChildren;
 
-        List<FireStationEntity> listFireStation = fireStationService.findByStation(stationNumber);     //plusieurs address
+        List<FireStationEntity> listFireStation = fireStationRepository.findByStation(stationNumber);     //plusieurs address
         List<MedicalRecordEntity> listMedicalRecord = new ArrayList<>();
         List<PersonEntity> personsCovert =  new ArrayList<>();
 
-        // associe l'adresse des habitants à celle de la caserne
-        for(FireStationEntity fireStation : listFireStation)  {
-            List<PersonEntity> result = personService
-                    .findByAddress(fireStation.getAddress());
-            personsCovert.addAll(result);
+        // Récupère la liste des personnes autour d'une caserne 
+        for(FireStationEntity fireStationEntity : listFireStation)  {
+            List<PersonEntity> personEntity = personRepository
+                    .findByAddress(fireStationEntity.getAddress());
+            personsCovert.addAll(personEntity);
         }
 
         // Pour trouver le nbre adulte et enfants, passer par MedicalRecord
-        for (PersonEntity person : personsCovert)   {
-            MedicalRecordEntity result = medicalRecordService
-                    .findByLastNameAndFirstName(person.getLastName(), person.getFirstName());
-            listMedicalRecord.add(result);                      //recupere un objet
+        for (PersonEntity personEntity : personsCovert)   {
+            MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
+                    .findByLastNameAndFirstName(personEntity.getLastName(), personEntity.getFirstName());
+            listMedicalRecord.add(medicalRecordEntity);                      //recupere un objet
         }
 
         // permet de déterminer l'âge des individus et distinguer enfants/adultes  + nbre
@@ -89,16 +114,15 @@ public class FireStationImpl implements FireStationService {
         //retourner l'objet PersonFireStation
         // retourne le résultat à savoir listHabitant + nbre enfants et nbre adultes
         PersonFireStationModel pfsm = new PersonFireStationModel();
-        List<PersonModel> listHabitants = personsCovert
+        List<PersonCovertModel> listHabitants = personsCovert
                 .stream()
-                .map(person -> new PersonModel(
-                        person.getFirstName(),
-                        person.getLastName(),
-                        person.getAddress(),
-                        person.getCity(),
-                        person.getPhone()))
+                .map(personEntity -> personMapper.mapToPersonCovertModel(personEntity))
+/*                .map(personEntity -> new PersonCovertModel(
+                        personEntity.getFirstName(),
+                        personEntity.getLastName(),
+                        personEntity.getPhone(),
+                        personEntity.getAddress()))*/
                 .toList();
-
         pfsm.setMembers(listHabitants);
         pfsm.setNbreAdult(numberOfAdult);
         pfsm.setNbreEnfant(numberOfChildren);
@@ -119,19 +143,17 @@ public class FireStationImpl implements FireStationService {
     @Override
     public List<String> getPhoneAlert(String stationNumber) {
 
-        List<PersonEntity> listPerson = personService.getPersonList();
-        List<FireStationEntity> listFireStation = fireStationService.findByStation(stationNumber);
+        List<PersonEntity> listPerson = personRepository.getPersonList();
+        List<FireStationEntity> listFireStation = fireStationRepository.findByStation(stationNumber);
         List<String> phones = new ArrayList<>();
         List<String> addressList = new ArrayList<>();
 
         // Récupère la liste des adresses des fireStation
         for (FireStationEntity fireStationEntity : listFireStation) {
-            if (fireStationEntity.getStation().equals(stationNumber))
                 addressList.add(fireStationEntity.getAddress());
         }
 
-        // Associe les adresses aux personnes souhaitées 
-        // Retourne les numéros de téléphone
+        // Associe les adresses aux personnes souhaitées
         for (String address : addressList ) {
             for (PersonEntity personEntity : listPerson) {
                 if(address.equals(personEntity.getAddress())) {
@@ -142,45 +164,7 @@ public class FireStationImpl implements FireStationService {
         return phones;
     }
 
-    @Override
-    public List<FireStationEntity> findByStation(String stationNumber) {
-        return fireStationService.findByStation(stationNumber);
-    }
-
-    @Override
-    public FireStationEntity findByAddress(String address) {
-        return fireStationService.findByAddress(address);
-    }
-
-    @Override
-    public void deleteFireStation(String address) {
-    }
-
-    @Override
-    public FireStationModel addFireStation(FireStationModel fireStationM) {
-
-        FireStationEntity fireStationEntity = new FireStationEntity();
-        fireStationEntity.setAddress(fireStationM.getAddress());
-        fireStationEntity.setStation(fireStationM.getStation());      //model en entity
-
-        FireStationEntity fse = fireStationRepository.addFireStation(fireStationEntity);
-        FireStationModel fireStationModel = new FireStationModel();
-        fireStationModel.setAddress(fse.getAddress());
-        fireStationModel.setStation(fse.getStation());
-        return fireStationModel;
-    }
-
-
-    /**
-     *   Renvoie la liste des personnes couvertes par la caserne de pompiers correspondante
-     *
-     */
-    @Override
-    public PersonFireStationModel getPersonFireStationModel(String stationNumber) {
-
-        return null;
-    }
-
+    
 
     /**
      *   Renvoie la liste des habitants vivant à une adresse donnée + num de la caserne
@@ -191,40 +175,39 @@ public class FireStationImpl implements FireStationService {
     @Override
     public FireModel getFireMembersAddress(String address) {
 
-        List<PersonEntity> listPerson = personService.findByAddress(address);
-        FireStationEntity fireStation = fireStationService.findByAddress(address);
-        
-        // récupérer la liste des habitants selon l'adresse d'une fireStation
-        // Faire coincider l'adresse des habitants avec celle des fireStations
-        //et une fois qu'on a les adresses de FS on récupère le n° des stations
-        // ou
-        // associer adresse des FS aux n° des stations
-        // Et associer adresse des hab avec celles des FS et construire la liste avec les
-        // paramètres voulus num tel age et MR
+        List<PersonEntity> listPerson = personRepository.findByAddress(address);
+        FireStationEntity fireStationEntity = fireStationRepository.findByAddress(address);
 
         List<FireMembersModel> listFireMembersModel = new ArrayList<>();
         for (PersonEntity personEntity : listPerson) {
-
-            FireMembersModel fireMembersModel = new FireMembersModel();
+/*            FireMembersModel fireMembersModel = new FireMembersModel();
             fireMembersModel.setFirstname(personEntity.getFirstName());
             fireMembersModel.setLastname(personEntity.getLastName());
             fireMembersModel.setPhone(personEntity.getPhone());
-            MedicalRecordEntity medicalRecordEntity = medicalRecordService
+            MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
                     .findByLastNameAndFirstName
                     (personEntity.getLastName(), personEntity.getFirstName());
             fireMembersModel.setAge(age.getAge(medicalRecordEntity.getBirthdate()));
             fireMembersModel.setMedications(medicalRecordEntity.getMedications());
             fireMembersModel.setAllergies(medicalRecordEntity.getAllergies());
-            listFireMembersModel.add(fireMembersModel);
+            listFireMembersModel.add(fireMembersModel);*/
+            MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
+                    .findByLastNameAndFirstName
+                            (personEntity.getLastName(), personEntity.getFirstName());
+            listFireMembersModel.add(fireStationMapper.mapToFireMembersModel(personEntity, medicalRecordEntity));
         }
 
         FireModel fireModel = new FireModel();
         fireModel.setFireMembersModels(listFireMembersModel);
-        fireModel.setStation(fireStation.getStation());
+        fireModel.setStation(fireStationEntity.getStation());
 
         return fireModel;
     }
 
+    @Override
+    public void deleteFireStation(String address) {
+
+    }
 
 
 }

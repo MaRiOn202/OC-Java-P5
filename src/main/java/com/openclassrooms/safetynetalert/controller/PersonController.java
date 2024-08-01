@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@AllArgsConstructor                              //@RequestMapping(path = "/person")
+@AllArgsConstructor
 public class PersonController {
 
     @Autowired
@@ -29,60 +29,58 @@ public class PersonController {
     private static final Logger log = LoggerFactory.getLogger(PersonController.class);
 
 
-/*    @PostMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<PersonModel> addPerson(@NotNull @RequestBody PersonModel person) {
-        this.personService.addPerson(person);
-        return ResponseEntity.status(HttpStatus.OK)
+    @PostMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonModel addPerson(@NotNull @RequestBody PersonModel personModel) {
+       // this.personService.addPerson(personModel);
+        return personService.addPerson(personModel);
+/*        return ResponseEntity.status(HttpStatus.OK)
                 .body(person.getLastName() + " "
-                + person.getFirstName() + " a bien été créée. " );
-    }*/
-
-
-    @GetMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<PersonEntity> findByLastNameAndFirstName(@RequestParam(name = "lastName", required = true) String lastName,
-                                                                   @RequestParam(name = "firstName", required = true) String firstName) {
-
-        log.info("URL : http://localhost:8080/person");
-        return ResponseEntity.status(HttpStatus.OK).body(personService
-                .findByLastNameAndFirstName(lastName,firstName));
+                        + person.getFirstName() + " a bien été créée. ");*/
     }
 
+    @PutMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonModel updatePerson(@NotNull
+            @RequestParam(name = "lastname", required = true) String lastName,
+            @RequestParam(name = "firstName", required = true) String firstName,
+            @RequestBody PersonModel personModel) {
+        ///
+        return personService.updatePerson(lastName, firstName, personModel);
+    }
     
     @DeleteMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deletePerson(@RequestParam(name = "lastName", required = true) String lastName,
-                                                @RequestParam(name = "firstName", required = true) String firstName) {
+    public Boolean deletePerson(@RequestParam(name = "lastName", required = true) String lastName,
+                               @RequestParam(name = "firstName", required = true) String firstName) {
         
         log.info("URL : http://localhost:8080/person?lastName="+lastName+"&firstName"+firstName);
          this.personService.deletePerson(lastName,firstName);
-        return ResponseEntity.status(HttpStatus.OK).body(lastName + " "
-        + firstName + " a bien été supprimé. ");
+         return personService.deletePerson(lastName, firstName);
+/*        return ResponseEntity.status(HttpStatus.OK).body(lastName + " "
+        + firstName + " a bien été supprimé. ");*/
     }
-     // Pourquoi String plutôt que Boolean ? 
-     // CRUD : absence de UPDATE dans les repository
 
 
     
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @GetMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<List<ChildModel>> getChildAlert(@RequestParam (name = "address", required = true)
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // URL n°2
+    @GetMapping(value = "/childAlert", produces = MediaType.APPLICATION_JSON_VALUE )
+    public List<ChildModel> getChildAlert(@RequestParam (name = "address", required = true)
     String address) {
 
         log.info("URL : http://localhost:8080/childAlert?address="+address);
-        return ResponseEntity.status(HttpStatus.OK).body(personService
-                .getChildAlert(address));
+        return personService.getChildAlert(address);
     }
-     // /person quand même ? ou comme doc /get ou childAlert ? l1
-    // dois-je changer le nom des méthodes ? pour coller au DCN ?
-/*     @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE )
-     public ResponseEntity<Map<String,List<FloodModel>>> getFlood(@NotNull @RequestParam (name = "stationNumber",
+
+     // URL n°5 : 
+     @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE )
+     public FloodModel getFlood(@NotNull @RequestParam (name = "stationNumber",
              required = true) List<String> stationNumber) {
 
          log.info("URL : http://localhost:8080/flood/stations?stations="+stationNumber);
-         return ResponseEntity.status(HttpStatus.OK).body(personService
-                 .getFlood(stationNumber));
-     }*/
+         return personService.getFlood(stationNumber);
+     }
      
 
+     // URL n°6
     @GetMapping(value = "/personInfo", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<List<PersonInfoModel>> getPersonInfo(@NotNull @RequestParam (name = "lastName", required = true) String lastName,
                                                                @RequestParam(name = "firstName", required = true) String firstName) {
@@ -92,13 +90,12 @@ public class PersonController {
                 .getPersonInfo(lastName, firstName));
     }
 
-
+    // URL n°7
     @GetMapping(value = "/communityEmail", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<List<String>> getCommunityEmail(@NotNull @RequestParam (name = "city", required = true) String city) {
+    public List<String> getCommunityEmail(@NotNull @RequestParam(name = "city", required = true) String city) {
 
         log.info("URL : http://localhost:8080/communityEmail?city="+city);
-        return ResponseEntity.status(HttpStatus.OK).body(personService
-                .getCommunityEmail(city));
+        return personService.getCommunityEmail(city);
     }
 
 }

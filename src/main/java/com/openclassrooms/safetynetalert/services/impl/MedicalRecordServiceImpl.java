@@ -25,6 +25,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     @Override
     public List<MedicalRecordEntity> getMedicalRecordList() {
+
         return medicalRecordRepository.getMedicalRecordList();
     }
 

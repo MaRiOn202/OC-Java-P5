@@ -22,13 +22,8 @@ public class PersonEntity implements Serializable {
         private String phone;
         private String email;
 
+
     public PersonEntity() {
+
     }
-
-    public PersonEntity(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-
 }

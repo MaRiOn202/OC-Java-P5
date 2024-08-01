@@ -1,13 +1,16 @@
+/*
 package com.openclassrooms.safetynetalert.services;
 
 
 import com.openclassrooms.safetynetalert.entity.FireStationEntity;
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
 import com.openclassrooms.safetynetalert.entity.PersonEntity;
+import com.openclassrooms.safetynetalert.mapper.PersonMapper;
+import com.openclassrooms.safetynetalert.repository.FireStationRepository;
+import com.openclassrooms.safetynetalert.repository.MedicalRecordRepository;
 import com.openclassrooms.safetynetalert.repository.PersonRepository;
 import com.openclassrooms.safetynetalert.services.impl.PersonServiceImpl;
-import com.openclassrooms.safetynetalert.utils.SerializationDriver;
-import org.junit.jupiter.api.BeforeAll;
+import com.openclassrooms.safetynetalert.utils.AgeUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,35 +19,40 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class PersonServiceTest {
 
-    //@InjectMocks
     @InjectMocks 
     private PersonServiceImpl personServiceImpl;
 
     @Mock
-    private MedicalRecordService medicalRecordService;
+    private MedicalRecordRepository medicalRecordRepository;;
 
     @Mock
-    private FireStationService fireStationService;
+    private FireStationRepository fireStationRepository;
 
     @Mock
     private PersonRepository personRepository;
 
+    @Mock
+    private AgeUtils age;
+
+    @Mock
+    private PersonMapper personMapper;
+
     Logger log = LoggerFactory.getLogger(PersonService.class);
 
-/*    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUp() {
         List<PersonEntity> listPerson = new ArrayList<>();
         List<FireStationEntity> listFireStation = new ArrayList<>();
         List<MedicalRecordEntity> listMedicalRecord =new ArrayList<>();
@@ -104,13 +112,14 @@ public class PersonServiceTest {
 
         listMedicalRecord.add(medicalRecord1);
         listMedicalRecord.add(medicalRecord2);
-    }*/
+    }
 
 
-/*    @Test
+    @Test
     void testGetPersonList() {
         List<PersonEntity> listPerson = new ArrayList<>();
-        // Création de deux personnes
+*/
+/*        // Création de deux personnes
         PersonEntity person1 = new PersonEntity();
         PersonEntity person2 = new PersonEntity();
 
@@ -131,15 +140,17 @@ public class PersonServiceTest {
         person2.setAddress("address2");
 
         listPerson.add(person1);
-        listPerson.add(person2);
-        //listPerson = personServiceImpl.getPersonList();
-        when(personServiceImpl.getPersonList()).thenReturn(listPerson);
+        listPerson.add(person2);*//*
+
+
+        when(personRepository.getPersonList()).thenReturn(listPerson);
         
         log.info("Résultat : {}", listPerson);
         assertEquals(listPerson, personServiceImpl.getPersonList());
-    }*/
+    }
 
 
+*/
 /*   @Test
    void testFindByLastNameAndFirstName() {
 
@@ -157,15 +168,23 @@ public class PersonServiceTest {
         assertEquals(person3.getLastName(), "person3LastName");
         assertEquals(person3.getFirstName(), "person3FirstName");
 
-   }*/
+   }*//*
 
+
+*/
 /*    @Test
     void testGetCommunityEmail() {
-
+        //pas de variable de classe
         List<String> emailList = new ArrayList<>();
-        when(personServiceImpl.getPersonList()).thenReturn();
+        when(personRepository.getPersonList()).thenReturn(listPerson);
 
-    }*/
+        emailList = personServiceImpl.getCommunityEmail("city2");
+
+        assertEquals(2, emailList.size());
+
+    }*//*
+
 
 
 }
+*/
