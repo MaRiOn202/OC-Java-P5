@@ -63,10 +63,33 @@ public class FireStationImpl implements FireStationService {
     }
 
     @Override
-    public FireStationModel updateFireStation(String address) {
-        return null;
+    public FireStationModel updateFireStation(FireStationModel fireStationModel) {
+        FireStationEntity fireStationUpdate =
+                fireStationRepository.findByAddress(fireStationModel.getAddress());
+        fireStationUpdate.setStation(fireStationModel.getStation());
+        fireStationUpdate = fireStationRepository.updateFireStation(fireStationUpdate);
+        
+        // fireStationEntity en FSModel
+        FireStationModel stationUpdated =  new FireStationModel();
+        stationUpdated.setStation(fireStationUpdate.getStation());
+        // donc mapper mapToFireStationModel
+        return stationUpdated;
     }
 
+
+    @Override
+    public Boolean deleteFireStation(String address) {
+            // à faire
+            final boolean fireStationDeleted = fireStationRepository.deleteFireStation(address);
+            if(fireStationDeleted) {
+                log.info("La caserne de pompier " + address + " a bien été supprimée");
+            } else {
+                log.info("La caserne de pompier " + address + " n' a pas été supprimée");
+            }
+            return fireStationDeleted;
+    }
+
+    
     /**
      *   Renvoie la liste des personnes couvertes par la caserne de pompier
      *   correspondante
@@ -194,7 +217,8 @@ public class FireStationImpl implements FireStationService {
             MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
                     .findByLastNameAndFirstName
                             (personEntity.getLastName(), personEntity.getFirstName());
-            listFireMembersModel.add(fireStationMapper.mapToFireMembersModel(personEntity, medicalRecordEntity));
+            listFireMembersModel.add(fireStationMapper.mapToFireMembersModel
+                    (personEntity, medicalRecordEntity));
         }
 
         FireModel fireModel = new FireModel();
@@ -204,10 +228,7 @@ public class FireStationImpl implements FireStationService {
         return fireModel;
     }
 
-    @Override
-    public void deleteFireStation(String address) {
 
-    }
 
 
 }

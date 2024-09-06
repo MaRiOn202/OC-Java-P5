@@ -46,4 +46,13 @@ public class PersonMapper {
 
 
     //tomapentity
+    public PersonEntity mapToPersonEntity(PersonModel personModel) {
+        PersonEntity personEntity = new PersonEntity();
+        personEntity.setAddress(personModel.getAddress());
+        personEntity.setCity(personModel.getCity());
+        personEntity.setPhone(personModel.getPhone());
+        personEntity.setEmail(personModel.getEmail());
+        personEntity.setZip(personModel.getZip());
+        return personEntity;
+    }
 }

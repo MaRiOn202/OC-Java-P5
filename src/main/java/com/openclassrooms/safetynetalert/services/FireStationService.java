@@ -11,7 +11,7 @@ public interface FireStationService {
 
     FireStationModel addFireStation(FireStationModel fireStationModel);
 
-    FireStationModel updateFireStation(String address);
+    FireStationModel updateFireStation(FireStationModel fireStationModel);
     
 
     //URL n°1 :  http://localhost:8080/firestation?stationNumber=<station_number>
@@ -25,7 +25,7 @@ public interface FireStationService {
     // URL n°4
     FireModel getFireMembersAddress(String address);
 
-    void deleteFireStation(String address);
+    Boolean deleteFireStation(String address);
 
 
 }

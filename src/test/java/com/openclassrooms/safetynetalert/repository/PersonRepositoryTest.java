@@ -21,8 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class PersonRepositoryTest {
-
-   // @Autowired
+    
     //@InjectMocks
     private PersonRepository personRepository;
 

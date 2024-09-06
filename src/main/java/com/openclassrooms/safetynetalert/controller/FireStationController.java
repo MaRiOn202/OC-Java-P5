@@ -35,7 +35,7 @@ public class FireStationController {
 
     @PostMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
     public FireStationModel addFireStation(@NotNull @RequestBody FireStationModel fireStationModel) {
-        //this.fireStationService.addFireStation(fireStationModel);
+        log.info("URL : http://localhost:8080/firestation?fireStationModel="+fireStationModel);
         return fireStationService.addFireStation(fireStationModel);
 /*        return ResponseEntity.status(HttpStatus.OK)
                 .body("La station n°"+ fireStationModel.getStation()
@@ -45,21 +45,24 @@ public class FireStationController {
 
      @PutMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
      public FireStationModel updateFireStation(@NotNull
-             @RequestParam(name = "address", required = true) String address) {
+             @RequestParam(name = "address", required = true) FireStationModel fireStationModel) {
+
              ///
-        return fireStationService.updateFireStation(address);
+        return fireStationService.updateFireStation(fireStationModel);
      }
 
 
 
     @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<String> deleteFireStation(@RequestParam(name = "address", required = true) String address) {
+    public Boolean deleteFireStation(
+            @RequestParam(name = "address", required = true) String address) {
 
-        log.info("URL : http://localhost:8080/firestation?address");
-        this.fireStationService.deleteFireStation(address);
-        return ResponseEntity.status(HttpStatus.OK).body("La caserne se situant au " + address + " a bien été supprimée. " );
+        log.info("URL : http://localhost:8080/firestation?address="+address);
+
+       // return ResponseEntity.status(HttpStatus.OK).body("La caserne se situant au " + address + " a bien été supprimée. " );
+        return fireStationService.deleteFireStation(address);
     }
-    //pourquoi pas Boolean ?
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,25 +1,31 @@
-/*
 package com.openclassrooms.safetynetalert.services;
 
-import com.openclassrooms.safetynetalert.model.FireStationModel;
+import com.openclassrooms.safetynetalert.entity.FireStationEntity;
+import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
+import com.openclassrooms.safetynetalert.entity.PersonEntity;
+import com.openclassrooms.safetynetalert.mapper.FireStationMapper;
+import com.openclassrooms.safetynetalert.mapper.PersonMapper;
+import com.openclassrooms.safetynetalert.model.*;
 import com.openclassrooms.safetynetalert.repository.FireStationRepository;
+import com.openclassrooms.safetynetalert.repository.MedicalRecordRepository;
+import com.openclassrooms.safetynetalert.repository.PersonRepository;
 import com.openclassrooms.safetynetalert.services.impl.FireStationImpl;
 
+import com.openclassrooms.safetynetalert.utils.AgeUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.print.DocFlavor;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class FireStationServiceTest {
@@ -30,56 +36,265 @@ public class FireStationServiceTest {
     @Mock
     FireStationRepository fireStationRepository;
 
-    private static List<FireStationModel> listFireStation;
+    @Mock
+    PersonRepository personRepository;
 
-    @BeforeEach
-    public void setUp() {
+    @Mock
+    MedicalRecordRepository medicalRecordRepository;
 
-        listFireStation = new ArrayList<>();
+    @Mock
+    FireStationMapper fireStationMapper;
 
-        // Création de deux fireStation
-        FireStationModel fireStation1 = new FireStationModel();
-        FireStationModel fireStation2 = new FireStationModel();
+    @Mock
+    AgeUtils age;
 
-        fireStation1.setStation("station1");
-        fireStation1.setAddress("address1");
+    @Mock
+    PersonMapper personMapper;
 
-        fireStation2.setStation("station2");
-        fireStation2.setAddress("address2");
+    
+     // il faut l'initialiser important
+   //private static final List<FireStationModel> listFireStation = new ArrayList<>();
+     private static final List<PersonEntity> listPerson  = new ArrayList<>();
+    private static final List<FireStationEntity> listFireStation  = new ArrayList<>();
+    private static final List<MedicalRecordEntity> listMedicalRecord = new ArrayList<>();
 
-        listFireStation.add(fireStation1);
-        listFireStation.add(fireStation2);
+
+   @BeforeEach
+    public void init() {
+
+      // Création de deux PersonEntity
+        PersonEntity person1 = new PersonEntity();
+        PersonEntity person2 = new PersonEntity();
+
+        person1.setLastName("lastName1");
+        person1.setFirstName("firstName1");
+        person1.setPhone("phone1");
+        person1.setAddress("Address1");
+
+        person2.setLastName("lastName2");
+        person2.setFirstName("firstName2");
+        person2.setPhone("phone2");
+        person2.setAddress("Address1");
+
+        listPerson.add(person1);
+        listPerson.add(person2);
+
+
+      // Création de deux FireStation
+      FireStationEntity fireStation1 = new FireStationEntity();
+      FireStationEntity fireStation2 = new FireStationEntity();
+
+      fireStation1.setStation("station1");
+      fireStation1.setAddress("Address1");
+      listFireStation.add(fireStation1);
+
+      fireStation2.setStation("station2");
+      fireStation2.setAddress("Address2");
+      listFireStation.add(fireStation2);
+
+       // Création de MedicalRecordEntity des 2 Person créées
+       MedicalRecordEntity medicalRecordEntity1 = new MedicalRecordEntity();
+       MedicalRecordEntity medicalRecordEntity2 = new MedicalRecordEntity();
+       List<String> medicationsAndAllergies = new ArrayList<>();
+       medicalRecordEntity1.setLastName("lastName1");
+       medicalRecordEntity1.setFirstName("firstName1");
+       medicalRecordEntity1.setBirthdate("09/06/2000");
+       medicalRecordEntity1.setMedications(medicationsAndAllergies);
+       medicalRecordEntity1.setAllergies(medicationsAndAllergies);
+       medicalRecordEntity2.setLastName("lastName2");
+       medicalRecordEntity2.setFirstName("firstName2");
+       medicalRecordEntity2.setBirthdate("09/06/2017");
+       medicalRecordEntity2.setMedications(medicationsAndAllergies);
+       medicalRecordEntity2.setAllergies(medicationsAndAllergies);
+       listMedicalRecord.add(medicalRecordEntity1);
+       listMedicalRecord.add(medicalRecordEntity2);
+
+       // Création de l'objet FireMembersModel qui représente les deux personnes du foyer créées précéd
+       FireMembersModel fireMembersModel1 = new FireMembersModel();
+       FireMembersModel fireMembersModel2 = new FireMembersModel();
+
+       fireMembersModel1.setLastname("lastName1");
+       fireMembersModel1.setFirstname("firstName1");
+       fireMembersModel2.setLastname("lastName2");
+       fireMembersModel2.setFirstname("firstName2");
+
+       // Personnes couvertes
+       PersonCovertModel personCovertModel1 = new PersonCovertModel();
+       List<PersonCovertModel> listPersonCovert = new ArrayList<>();
+       personCovertModel1.setLastName("lastName1");
+       personCovertModel1.setFirstName("firstName1");
+       listPersonCovert.add(personCovertModel1);
 
     }
 
-*/
-/*    @Test
+    @Test
     void testAddFireStation() {
 
         FireStationModel fireStationModel = new FireStationModel();
-        fireStationModel.setAddress("dfdfrg");
-        fireStationModel.setStation("6");
+        fireStationModel.setAddress("Address1");
+        fireStationModel.setStation("1");
+
+        FireStationEntity fireStationEntity = new FireStationEntity();
+        fireStationEntity.setAddress("Address1");
+        fireStationEntity.setStation("1");
+        // ces deux block seront à suppr du test du coup 
+
+        when(fireStationRepository.addFireStation(any(FireStationEntity.class))).thenReturn(fireStationEntity);
+
+        FireStationModel result = fireStationImpl.addFireStation(fireStationModel);
+
+        assertEquals("Address1", result.getAddress());
+        assertEquals("1", result.getStation());
+        verify(fireStationRepository, times(1)).addFireStation(any(FireStationEntity.class));
+    }
 
 
-    }*//*
+    @Test
+    void testUpdateFireStation() {
+       FireStationModel fireStationModel1 = new FireStationModel();  //caserne récupérée
+       fireStationModel1.setAddress("address1");
+       fireStationModel1.setStation("1");
+
+       FireStationEntity fireStationEntity1 = new FireStationEntity();  // caserne à modifier
+       fireStationEntity1.setAddress("address1");
+       fireStationModel1.setStation("2");
+
+       FireStationEntity fireStationUpdate = new FireStationEntity();  // caserne updated
+       fireStationUpdate.setAddress("address1");
+       fireStationUpdate.setStation("1");
+
+       when(fireStationRepository.findByAddress("address1")).thenReturn(fireStationEntity1);
+       when(fireStationRepository.updateFireStation(fireStationEntity1)).thenReturn(fireStationUpdate);
+
+       FireStationModel result = fireStationImpl.updateFireStation(fireStationModel1);
+
+       assertEquals("1", result.getStation());
+       verify(fireStationRepository, times(1)).updateFireStation(fireStationEntity1);
+
+    }
+
+    @Test
+    void testDeleteFireStation() {
+       String address = "address1";
+       when(fireStationRepository.deleteFireStation(address)).thenReturn(true);
+       Boolean result = fireStationImpl.deleteFireStation(address);
+
+       assertEquals(true, result);
+       verify(fireStationRepository,times(1)).deleteFireStation(address);
+    }
 
 
-*/
+    @Test
+    void testGetPhoneAlert() {
+
+      when(personRepository.getPersonList()).thenReturn(listPerson);
+      when(fireStationRepository.findByStation("1")).thenReturn(listFireStation);
+      List<String> phoneList = fireStationImpl.getPhoneAlert("1");
+
+      assertEquals(2, phoneList.size());
+      assertEquals("phone2", phoneList.get(1));
+      verify(fireStationRepository, times(1)).findByStation("1");
+
+    }
+
+    @Test
+    void testGetFireMembersAddress() {
+     // Je veux récupérer l'adresse des personnes d'un même foyer
+        // Créatino d'un jeu de données fictif
+     String address = "Address1";
+
+     List<PersonEntity> listPerson = new ArrayList<>();
+
+    // Création de deux personnes
+     PersonEntity person1 = new PersonEntity();
+     PersonEntity person2 = new PersonEntity();
+
+     person1.setLastName("lastName1");
+     person1.setFirstName("firstName1");
+     person1.setAddress(address);
+     person2.setLastName("lastName2");
+     person2.setFirstName("firstName2");
+     person2.setAddress(address);
+     listPerson.add(person1);
+     listPerson.add(person2);
+
+     // Création de FireStationEntity
+     FireStationEntity fireStation1 = new FireStationEntity();
+     fireStation1.setStation("1");
+     fireStation1.setAddress(address);
+
+     // Création de MedicalRecordEntity des 2 Person créées
+     MedicalRecordEntity medicalRecordEntity1 = new MedicalRecordEntity();
+     MedicalRecordEntity medicalRecordEntity2 = new MedicalRecordEntity();
+     medicalRecordEntity1.setLastName("lastName1");
+     medicalRecordEntity1.setFirstName("firstName1");
+     medicalRecordEntity2.setLastName("lastName2");
+     medicalRecordEntity2.setFirstName("firstName2");
+
+     // Création de l'objet FireMembersModel qui représente les deux personnes du foyer créées précéd
+     FireMembersModel fireMembersModel1 = new FireMembersModel();
+     FireMembersModel fireMembersModel2 = new FireMembersModel();
+
+     fireMembersModel1.setLastname("lastName1");
+     fireMembersModel1.setFirstname("firstName1");
+     fireMembersModel2.setLastname("lastName2");
+     fireMembersModel2.setFirstname("firstName2");
+
+     // Lecture des différentes méthodes avec jeux de données fictifs
+     when(personRepository.findByAddress(address)).thenReturn(listPerson);
+     when(fireStationRepository.findByAddress(address)).thenReturn(fireStation1);
+     when(medicalRecordRepository.findByLastNameAndFirstName
+             ("lastName1", "firstName1")).thenReturn(medicalRecordEntity1);
+     when(medicalRecordRepository.findByLastNameAndFirstName
+             ("lastName2", "firstName2")).thenReturn(medicalRecordEntity2);
+     // liste de personEntity et medicalEntity
+     when(fireStationMapper.mapToFireMembersModel
+             (person1, medicalRecordEntity1)).thenReturn(fireMembersModel1);
+     when(fireStationMapper.mapToFireMembersModel
+             (person2, medicalRecordEntity2)).thenReturn(fireMembersModel2);
+
+     FireModel result = fireStationImpl.getFireMembersAddress(address);
+
+     // Résultats jeux de données proposés
+     assertEquals("lastName1", result.getFireMembersModels().get(0).getLastname());
+     assertEquals("firstName1", result.getFireMembersModels().get(0).getFirstname());
+     assertEquals("lastName2", result.getFireMembersModels().get(1).getLastname());
+     assertEquals("firstName2", result.getFireMembersModels().get(1).getFirstname());
+     assertEquals("1", result.getStation());
+
+     // Vérification méthodes
+     verify(personRepository, times(1)).findByAddress(address);
+     verify(fireStationRepository, times(1)).findByAddress(address);
+     verify(medicalRecordRepository, times(1)).findByLastNameAndFirstName("lastName1", "firstName1");
+     verify(fireStationMapper, times(1)).mapToFireMembersModel(person1, medicalRecordEntity1);
+    }
+
 /*    @Test
-    void testFindByAddress() {
+    void testGetPersonCovertByFireStation() {
 
-      FireStationEntity newFireStation = new FireStationEntity();
-      newFireStation.setAddress("NewAddress");
+        long numberOfAdult;
+        long numberOfChildren;
+        String stationNumber = "1";
+        PersonEntity person1 = new PersonEntity();
+        PersonCovertModel personCovertModel1 = new PersonCovertModel();
+        MedicalRecordEntity medicalRecordEntity1 = new MedicalRecordEntity();
+        medicalRecordEntity1.setLastName("lastName1");
+        medicalRecordEntity1.setFirstName("firstName1");
+        medicalRecordEntity1.setBirthdate("09/06/2000");
 
-      when(fireStationRepository.findByAddress(newFireStation.getAddress())).thenReturn(new FireStationEntity());
-      when(fireStationRepository.addFireStation(newFireStation)).thenReturn(listFireStation.add(newFireStation));
-      assertEquals("NewAddress", newFireStation.getAddress());
+        when(fireStationRepository.findByStation(stationNumber)).thenReturn(listFireStation);
+        when(personRepository.findByAddress("Address1")).thenReturn(listPerson);
+        when(medicalRecordRepository.findByLastNameAndFirstName("lastName1", "firstName1")).thenReturn(medicalRecordEntity1);
+        when(age.getMinor(medicalRecordEntity1.getBirthdate())).thenReturn(false);       // adulte car 24 ans
+        when(personMapper.mapToPersonCovertModel(person1)).thenReturn(personCovertModel1);
+
+        PersonFireStationModel pfsm = fireStationImpl.getPersonCovertByFireStation(stationNumber);
+
+        assertEquals("lastName1", pfsm.getMembers().get(0).getLastName());
+        assertEquals(1, pfsm.getNbreAdult());
+        // problème medicalRecord is null  pb avec le birthday
 
 
-    }*//*
-
-
-
+    }*/
 
 }
-*/

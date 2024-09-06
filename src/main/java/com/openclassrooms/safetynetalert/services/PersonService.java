@@ -18,7 +18,7 @@ public interface PersonService {
     
     PersonModel addPerson(PersonModel personModel);
 
-    PersonModel updatePerson(String lastName, String firstName, PersonModel personModel);
+    PersonModel updatePerson(PersonModel personModel);
 
 //    PersonModel findByLastNameAndFirstName(String lastName, String firstName);
 

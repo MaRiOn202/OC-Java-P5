@@ -21,14 +21,19 @@ public class MedicalRecordRepository {
     public SerializationDriver serializationDriver;
     
     public List<MedicalRecordEntity> getMedicalRecordList() {
-
         return serializationDriver.safetyAlert.getMedicalRecords();
     }
 
     
-    public void addMedicalRecord(MedicalRecordEntity medicalRecord) {
+    public MedicalRecordEntity addMedicalRecord(MedicalRecordEntity medicalRecordEntity) {
+        this.listMedicalRecord.add(medicalRecordEntity);
+        return medicalRecordEntity;
+    }
 
-        this.listMedicalRecord.add(medicalRecord);
+    // Laisser comme ça 
+    public MedicalRecordEntity updateMedicalRecord(MedicalRecordEntity medicalUpdate) {
+
+        return medicalUpdate;
     }
 
     public MedicalRecordEntity findByLastNameAndFirstName(String lastName, String firstName) {
@@ -38,7 +43,7 @@ public class MedicalRecordRepository {
                    medicalRecord.getFirstName().equals(firstName))
                return medicalRecord;
        }
-       return null;               //optional.empty https://medium.com/@JeremieGottero/optional-en-java-quand-lutiliser-et-quand-ne-pas-l-utiliser-9bc759e162cd 
+       return null;              // cours optional.empty https://medium.com/@JeremieGottero/optional-en-java-quand-lutiliser-et-quand-ne-pas-l-utiliser-9bc759e162cd
     }
 
 
@@ -60,5 +65,6 @@ public class MedicalRecordRepository {
         }
         return false;
     }
+
 
 }

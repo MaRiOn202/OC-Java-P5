@@ -1,6 +1,7 @@
 package com.openclassrooms.safetynetalert.controller;
 
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
+import com.openclassrooms.safetynetalert.model.MedicalRecordModel;
 import com.openclassrooms.safetynetalert.services.MedicalRecordService;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -23,35 +24,42 @@ public class MedicalRecordController {
 
 
     @PostMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<String> addMedicalRecord(@NotNull @RequestParam MedicalRecordEntity medicalRecord) {
-
-        return ResponseEntity.status(HttpStatus.OK).body("Le carnet de santé de "+ medicalRecord.getLastName()
+    public MedicalRecordModel addMedicalRecord(@NotNull @RequestParam MedicalRecordModel medicalRecordModel) {
+        log.info("URL : http://localhost:8080/medicalRecord");
+    /*    return ResponseEntity.status(HttpStatus.OK).body("Le carnet de santé de "+ medicalRecord.getLastName()
                 + " "
-                + medicalRecord.getFirstName() + " a bien été créé. " );
+                + medicalRecord.getFirstName() + " a bien été créé. " );*/
+        return medicalRecordService.addMedicalRecord(medicalRecordModel);
     }
 
+    @PutMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
+    public MedicalRecordModel updateMedicalRecord(
+            @NotNull
+            @RequestParam(name = "address", required = true) MedicalRecordModel medicalRecordModel) {
 
-    @GetMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<MedicalRecordEntity> findByLastNameAndFirstName(@RequestParam(name = "lastName", required = true) String lastName,
-                                                                   @RequestParam(name = "firstName", required = true) String firstName) {
-
-        log.info("URL : http://localhost:8080/medicalRecord?lastName="+lastName+"&firstName"+firstName);
-        return ResponseEntity.status(HttpStatus.OK).body(medicalRecordService
-                .findByLastNameAndFirstName(lastName,firstName));
+        return medicalRecordService.updateMedicalRecord(medicalRecordModel);
     }
-
-
+    
     @DeleteMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<String> deleteMedicalRecord(@RequestParam(name = "lastName", required = true) String lastName,
-                                                    @RequestParam(name = "firstName", required = true) String firstName) {
+    public Boolean deleteMedicalRecord(@RequestParam(name = "lastName", required = true) String lastName,
+                                       @RequestParam(name = "firstName", required = true) String firstName) {
 
         log.info("URL : http://localhost:8080/medicalRecord?lastName="+lastName+"&firstName"+firstName);
-        this.medicalRecordService.deleteMedicalRecord(lastName, firstName);
-        return ResponseEntity.status(HttpStatus.OK).body("LLe carnet de santé de " + lastName + " " + firstName + " a bien été supprimée. " );
+        //return ResponseEntity.status(HttpStatus.OK).body("LLe carnet de santé de " + lastName + " " + firstName + " a bien été supprimée. " );
+        return medicalRecordService.deleteMedicalRecord(lastName, firstName);
     }
 
 
+/*    @GetMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
+    public MedicalRecordEntity findByLastNameAndFirstName
+            (@RequestParam(name = "lastName", required = true) String lastName,
+             @RequestParam(name = "firstName", required = true) String firstName) {
 
+        log.info("URL : http://localhost:8080/medicalRecord?lastName="+lastName+"&firstName"+firstName);
+  *//*      return ResponseEntity.status(HttpStatus.OK).body(medicalRecordService
+                .findByLastNameAndFirstName(lastName,firstName));*//*
+        return medicalRecordService.findByLastNameAndFirstName(lastName, firstName);
+    }*/
 
 
 }

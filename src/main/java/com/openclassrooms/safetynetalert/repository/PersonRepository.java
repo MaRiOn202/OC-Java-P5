@@ -28,7 +28,23 @@ public class PersonRepository {
         this.listPerson.add(personEntity);
         return personEntity;
     }
-    
+
+    // Laisser comme cela
+    public PersonEntity updatePerson(PersonEntity personUpdate) {
+
+        return personUpdate;
+    }
+
+
+    public Boolean deletePerson(String lastName, String firstName) {
+        listPerson = getPersonList();
+        for (PersonEntity person : listPerson) {
+            if (person.getLastName().equals(lastName) &&
+                    person.getFirstName().equals(firstName))
+                return listPerson.remove(person);    //true
+        }
+        return false;
+    }
 
     public PersonEntity findByLastNameAndFirstName(String lastName, String firstName) {
         listPerson = getPersonList();
@@ -63,16 +79,8 @@ public class PersonRepository {
         }
 
 
-    public Boolean deletePerson(String lastName, String firstName) {
-        listPerson = getPersonList();
-        for (PersonEntity person : listPerson) {
-            if (person.getLastName().equals(lastName) &&
-                    person.getFirstName().equals(firstName))
-                return listPerson.remove(person);    //true
-        }
-        return false;
-    }
-    
+
+
 
 }
 /*    public Person findAll(String firstName, String lastName, String address, String city,

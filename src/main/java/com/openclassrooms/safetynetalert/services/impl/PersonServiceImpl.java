@@ -11,7 +11,6 @@ import com.openclassrooms.safetynetalert.repository.MedicalRecordRepository;
 import com.openclassrooms.safetynetalert.repository.PersonRepository;
 import com.openclassrooms.safetynetalert.services.PersonService;
 import com.openclassrooms.safetynetalert.utils.AgeUtils;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +55,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonModel addPerson(PersonModel personM) {
         PersonEntity personEntity = new PersonEntity();
-        personMapper.mapToPersonModel(personEntity);
-/*        PersonEntity personEntity = new PersonEntity();
+         personEntity = personMapper.mapToPersonEntity(personM);
+    /*    PersonEntity personEntity = new PersonEntity();
         personEntity.setLastName(personM.getLastName());
         personEntity.setFirstName(personM.getFirstName());
         personEntity.setAddress(personM.getAddress());
@@ -68,41 +67,46 @@ public class PersonServiceImpl implements PersonService {
 
         PersonEntity pe = personRepository.addPerson(personEntity);
 
-        PersonModel personModel= new PersonModel();               //  entity en model
-        personModel.setLastName(pe.getLastName());
+        PersonModel personModel = personMapper.mapToPersonModel(pe);    //  entity en model
+/*        personModel.setLastName(pe.getLastName());
         personModel.setFirstName(pe.getFirstName());
         personModel.setAddress(pe.getAddress());
         personModel.setCity(pe.getCity());
         personModel.setZip(pe.getZip());
-        personModel.setEmail(pe.getEmail());
+        personModel.setEmail(pe.getEmail());*/
+
         log.info("New person saved !");                                                          //Ok
         return personModel;
     }
 
     @Override
-    public PersonModel updatePerson(String lastName, String firstName, PersonModel personModel) {
-        PersonEntity personUpdate  = new PersonEntity();
-         //attentino update uen seul person pas de list
-        List<PersonEntity> listPerson =
-                personRepository.findByLastNameAndFirstNameList(lastName, firstName);
+    public PersonModel updatePerson(PersonModel personModel) {
+        PersonEntity personUpdate =
+                personRepository.findByLastNameAndFirstName(personModel.getLastName(), personModel.getFirstName());
+        personUpdate.setAddress(personModel.getAddress());
+        personUpdate.setCity(personModel.getCity());
+        personUpdate.setPhone(personModel.getPhone());
+        personUpdate.setEmail(personModel.getEmail());
+        personUpdate.setZip(personModel.getZip());               // Model en entity
+        //A VERIFIER
+        //personMapper.mapToPersonEntity(personModel);
 
-        for (PersonEntity personEntity : listPerson) {
-            personEntity.setAddress(personModel.getAddress());
-            personEntity.setCity(personModel.getCity());
-            personEntity.setZip(personModel.getZip());
-            personEntity.setPhone(personModel.getPhone());
-            personEntity.setEmail(personModel.getEmail());
-
-        }
-        return personModel;
-        //listPerson.add(personUpdate);
+        //sauvegarder
+        personUpdate = personRepository.updatePerson(personUpdate);
+        PersonModel personReturn = personMapper.mapToPersonModel(personUpdate);
+        return personReturn;
     }
 
     @Override
     public Boolean deletePerson(String lastName, String firstName) {
-         // à faire
-        
-        return this.deletePerson(lastName, firstName);
+         final boolean personDeleted = personRepository.deletePerson(lastName, firstName);
+         if(personDeleted) {
+             //slf4j log à utiliser // log.info
+             log.info("La personne " + lastName + " " + firstName + " a bien été supprimée");
+         } else {
+             log.info("La personne " + lastName + " " + firstName + " n'a pas été supprimée");
+         }
+        return personDeleted;
     }
 
     

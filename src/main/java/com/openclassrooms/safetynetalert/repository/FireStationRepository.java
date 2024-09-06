@@ -35,6 +35,23 @@ public class FireStationRepository {
         return fireStationEntity;
     }
 
+
+    // A LAISSER
+    public FireStationEntity updateFireStation(FireStationEntity fireStationUpdate) {
+        return fireStationUpdate;
+    }
+
+    
+    public Boolean deleteFireStation(String address) {
+        listFireStation = getFireStationList();
+        for (FireStationEntity fireStation : listFireStation) {
+            if (fireStation.getAddress().equals(address))
+                return listFireStation.remove(fireStation);   //True
+        }
+        return false;
+    }
+
+
     public List<FireStationEntity> findByStation(String station) {
         List<FireStationEntity> fireStationResult = new ArrayList<>();
         listFireStation = getFireStationList();
@@ -55,7 +72,6 @@ public class FireStationRepository {
     }
 
 
-
     // à gérer dans le service exception "pas de station trouvée
     //rajouter par station  aussi car rapporte plusieurs firestation
 
@@ -66,26 +82,6 @@ public class FireStationRepository {
                 return fireStation;
         }
         return new FireStation();
-    }*/
-
-
-/*    public List<FireStation> removeFireStation(FireStation fireStation) {
-        listFireStation = getFireStationList();
-        this.listFireStation.remove(fireStation);
-        return null;
-    }*/
-
-    public Boolean deleteFireStation(String address) {
-        listFireStation = getFireStationList();
-        for (FireStationEntity fireStation : listFireStation) {
-            if (fireStation.getAddress().equals(address))
-                return listFireStation.remove(fireStation);   //True
-        }
-        return false;
-
-    }
-  /*  public void deleteFireStation(FireStationEntity fireStation) {
-         this.listFireStation.remove(fireStation);
     }*/
 
 
