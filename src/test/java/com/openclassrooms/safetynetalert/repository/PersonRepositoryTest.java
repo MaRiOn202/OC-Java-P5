@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(MockitoExtension.class)
 public class PersonRepositoryTest {
     
-    //@InjectMocks
     private PersonRepository personRepository;
 
     Logger log = LoggerFactory.getLogger(PersonRepository.class);
@@ -35,7 +34,7 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    void testPersonRepositoryAddPerson() {
+    void testPersonRepositoryAddPersonReturnTrue() {
 
         PersonEntity person = new PersonEntity();
         person.setLastName("toto");
@@ -51,7 +50,7 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    void testPersonRepositoryRemovePerson() {
+    void testPersonRepositoryRemovePersonReturnTrue() {
 
         Boolean result = personRepository.deletePerson("Boyd",
                 "John");
@@ -64,7 +63,7 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    void testPersonRepositoryFindByLastNameAndFirstName() {
+    void testPersonRepositoryFindByLastNameAndFirstNameCasNominal() {
         
         person = personRepository.findByLastNameAndFirstName("Boyd","John");
         log.info("Résultat : {}", person);
@@ -75,7 +74,7 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    void testPersonRepositoryFindByAddress() {
+    void testPersonRepositoryFindByAddressCasNominal() {
 
         List<PersonEntity> result = personRepository.findByAddress("1509 Culver St");
         List<PersonEntity> listPerson = personRepository.findByAddress("1509 Culver St");

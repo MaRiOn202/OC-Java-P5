@@ -2,7 +2,9 @@ package com.openclassrooms.safetynetalert.mapper;
 
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
 import com.openclassrooms.safetynetalert.model.MedicalRecordModel;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MedicalRecordMapper {
 
     public MedicalRecordEntity mapToMedicalRecordEntity(MedicalRecordModel medicalRecordModel) {
@@ -24,4 +26,6 @@ public class MedicalRecordMapper {
         medicalRecordModel.setAllergies(medicalRecordEntity.getAllergies());
         return medicalRecordModel;
     }
+
+
 }

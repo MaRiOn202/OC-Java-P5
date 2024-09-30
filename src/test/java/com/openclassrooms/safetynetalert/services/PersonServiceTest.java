@@ -5,10 +5,7 @@ import com.openclassrooms.safetynetalert.entity.FireStationEntity;
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
 import com.openclassrooms.safetynetalert.entity.PersonEntity;
 import com.openclassrooms.safetynetalert.mapper.PersonMapper;
-import com.openclassrooms.safetynetalert.model.FireStationModel;
 import com.openclassrooms.safetynetalert.model.PersonModel;
-import com.openclassrooms.safetynetalert.repository.FireStationRepository;
-import com.openclassrooms.safetynetalert.repository.MedicalRecordRepository;
 import com.openclassrooms.safetynetalert.repository.PersonRepository;
 import com.openclassrooms.safetynetalert.services.impl.PersonServiceImpl;
 import com.openclassrooms.safetynetalert.utils.AgeUtils;
@@ -20,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +32,6 @@ public class PersonServiceTest {
     private PersonServiceImpl personServiceImpl;
 
     @Mock
-    private MedicalRecordRepository medicalRecordRepository;;
-
-    @Mock
-    private FireStationRepository fireStationRepository;
-
-    @Mock
     private PersonRepository personRepository;
 
     @Mock
@@ -55,13 +45,14 @@ public class PersonServiceTest {
     private List<MedicalRecordEntity> listMedicalRecord =new ArrayList<>();
     private PersonModel personModelActual = new PersonModel();
     private PersonModel personExpected = new PersonModel();
-    private static final PersonEntity person1 = new PersonEntity();
+
+    private PersonEntity personEntity = new PersonEntity();
+
 
     Logger log = LoggerFactory.getLogger(PersonService.class);
 
     @BeforeEach
     public void init() {
-        //List<PersonEntity> listPerson = new ArrayList<>();
         
         // Création de deux personnes
         PersonEntity person1 = new PersonEntity();
@@ -121,28 +112,28 @@ public class PersonServiceTest {
 
         // Création d'une PersonModel
         personExpected = new PersonModel();
-        personExpected.setLastName("lastName1");
-        personExpected.setFirstName("firstName1");
-        personExpected.setAddress("Culver");
-        personExpected.setCity("city1");
-        personExpected.setZip("zip");
-        personExpected.setEmail("email1@safety.com");
-        personExpected.setPhone("phone1");
+        personExpected.setLastName("Cadigan");
+        personExpected.setFirstName("Eric");
+        personExpected.setAddress("951 LoneTree Rd");
+        personExpected.setCity("Culver");
+        personExpected.setZip("97451");
+        personExpected.setEmail("gramps@email.com");
+        personExpected.setPhone("841-874-7458");
 
         personModelActual = new PersonModel();
-        personModelActual.setLastName("lastName1");
-        personModelActual.setFirstName("firstName1");
-        personModelActual.setAddress("Culver");
-        personModelActual.setCity("city1");
-        personModelActual.setZip("zip");
-        personModelActual.setEmail("email1@safety.com");
-        personModelActual.setPhone("phone1");
+        personModelActual.setLastName("Cadigan");
+        personModelActual.setFirstName("Eric");
+        personModelActual.setAddress("951 LoneTree Rd");
+        personModelActual.setCity("Culver");
+        personModelActual.setZip("97451");
+        personModelActual.setEmail("gramps@email.com");
+        personModelActual.setPhone("841-874-7458");
         
     }
 
      @Test
      void testAddPersonShouldReturnPersonModel() {
-         PersonEntity personEntity = new PersonEntity();
+        personEntity = new PersonEntity();
          personEntity.setLastName("lastName1");
          personEntity.setFirstName("firstName1");
          personEntity.setAddress("Culver");
@@ -152,13 +143,13 @@ public class PersonServiceTest {
          personEntity.setEmail("email1@safety.com");
 
          PersonModel personModel = new PersonModel();
-         personModel.setLastName("lastName1");
-         personModel.setFirstName("firstName1");
-         personModel.setAddress("Culver");
-         personModel.setCity("city1");
-         personModel.setZip("zip");
-         personModel.setEmail("email1@safety.com");
-         personModel.setPhone("phone1");
+         personModel.setLastName("Cadigan");
+         personModel.setFirstName("Eric");
+         personModel.setAddress("951 LoneTree Rd");
+         personModel.setCity("Culver");
+         personModel.setZip("97451");
+         personModel.setEmail("gramps@email.com");
+         personModel.setPhone("841-874-7458");
 
          when(personMapper.mapToPersonEntity(any(PersonModel.class))).thenReturn(personEntity);
          when(personMapper.mapToPersonModel(any(PersonEntity.class))).thenReturn(personModel);
@@ -168,8 +159,48 @@ public class PersonServiceTest {
 
      }
 
+     @Test
+     void testUpdatePersonShouldReturnPersonUpdated() {
+         PersonModel personModel = new PersonModel();
+         personModel.setLastName("Cadigan");
+         personModel.setFirstName("Eric");
+         personModel.setAddress("951 LoneTree Rd");
+         personModel.setCity("Culver");
+         personModel.setZip("97451");
+         personModel.setEmail("gramps@email.com");
+         personModel.setPhone("841-874-7458");
+
+         personEntity = new PersonEntity();
+         personEntity.setLastName("Cadigan");
+         personEntity.setFirstName("Eric");
+         personEntity.setAddress("1509 Culver St");
+         personEntity.setCity("Paris");
+         personEntity.setZip("78000");
+         personEntity.setPhone("999-874-6512");
+         personEntity.setEmail("aboyd@email.com");
+
+         PersonEntity personUpdate = new PersonEntity();
+         personUpdate.setLastName("Cadigan");
+         personUpdate.setFirstName("Eric");
+         personUpdate.setAddress("951 LoneTree Rd");
+         personUpdate.setCity("Culver");
+         personUpdate.setZip("97451");
+         personUpdate.setEmail("gramps@email.com");
+         personUpdate.setPhone("841-874-7458");
+
+         when(personRepository.findByLastNameAndFirstName("Cadigan","Eric")).thenReturn(personEntity);
+         when(personMapper.mapToPersonModel(any(PersonEntity.class))).thenReturn(personModel);
+         when(personRepository.updatePerson(personEntity)).thenReturn(personUpdate);
+
+         PersonModel result = personServiceImpl.updatePerson(personModel);
+
+         assertEquals("951 LoneTree Rd", result.getAddress());
+         assertEquals("Culver", result.getCity());
+         verify(personRepository, times(1)).updatePerson(personEntity);
+     }
+
     @Test
-    void testDeletePerson() {
+    void testDeletePersonTrueResult() {
         String lastName = "lastName2";
         String firstName = "firstName2";
         when(personRepository.deletePerson(lastName, firstName )).thenReturn(true);
@@ -178,35 +209,21 @@ public class PersonServiceTest {
         assertEquals(true, result);
         verify(personRepository,times(1)).deletePerson(lastName, firstName);
     }
+    
+    @Test
+    void testDeletePersonFalseResult() {
+        String lastName = "lastName2";
+        String firstName = "firstName2";
+        when(personRepository.deletePerson(lastName, firstName )).thenReturn(false);
+        Boolean result = personServiceImpl.deletePerson(lastName, firstName);
+
+        assertEquals(false, result);
+        verify(personRepository,times(1)).deletePerson(lastName, firstName);
+    }
 
 
     @Test
     void testGetCommunityEmail() {
-        //Attention : pas de variable de classe
-        //List<PersonEntity> listPerson = new ArrayList<>();
-
-/*        // Création de deux personnes
-        PersonEntity person1 = new PersonEntity();
-        PersonEntity person2 = new PersonEntity();
-
-        person1.setLastName("lastName1");
-        person1.setFirstName("firstName1");
-        person1.setCity("Culver");
-        person1.setZip("zip1");
-        person1.setPhone("phone1");
-        person1.setEmail("email1@safety.com");
-        person1.setAddress("address1");
-
-        person2.setLastName("lastName2");
-        person2.setFirstName("firstName2");
-        person2.setCity("Culver");
-        person2.setZip("zip2");
-        person2.setPhone("phone2");
-        person2.setEmail("email2@safety.com");
-        person2.setAddress("address2");
-
-        listPerson.add(person1);
-        listPerson.add(person2);*/
        
         when(personRepository.getPersonList()).thenReturn(listPerson);
         List<String> emailList = personServiceImpl.getCommunityEmail("Culver");
@@ -216,6 +233,9 @@ public class PersonServiceTest {
         verify(personRepository, times(1)).getPersonList();
     }
 
-
+/*     @Test
+    void testGetPersonInfoShouldReturnListPersonInfo() {
+        
+     }*/
 
 }

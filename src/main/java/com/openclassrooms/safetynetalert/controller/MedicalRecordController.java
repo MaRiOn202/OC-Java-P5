@@ -24,19 +24,20 @@ public class MedicalRecordController {
 
 
     @PostMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
-    public MedicalRecordModel addMedicalRecord(@NotNull @RequestParam MedicalRecordModel medicalRecordModel) {
-        log.info("URL : http://localhost:8080/medicalRecord");
+    public ResponseEntity<MedicalRecordModel> addMedicalRecord(@NotNull @RequestBody MedicalRecordModel medicalRecordModel) {
+        log.info("URL : http://localhost:8080/medicalRecord?medicalRecordModel="+medicalRecordModel);
     /*    return ResponseEntity.status(HttpStatus.OK).body("Le carnet de santé de "+ medicalRecord.getLastName()
                 + " "
                 + medicalRecord.getFirstName() + " a bien été créé. " );*/
-        return medicalRecordService.addMedicalRecord(medicalRecordModel);
+        medicalRecordService.addMedicalRecord(medicalRecordModel);
+        return new ResponseEntity<>(medicalRecordModel, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
     public MedicalRecordModel updateMedicalRecord(
             @NotNull
-            @RequestParam(name = "address", required = true) MedicalRecordModel medicalRecordModel) {
-
+            @RequestBody MedicalRecordModel medicalRecordModel) {
+    log.info("URL : http://localhost:8080/medicalRecord?medicalRecordModel="+medicalRecordModel);
         return medicalRecordService.updateMedicalRecord(medicalRecordModel);
     }
     

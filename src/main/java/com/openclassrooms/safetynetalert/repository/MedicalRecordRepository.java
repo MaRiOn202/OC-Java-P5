@@ -32,8 +32,18 @@ public class MedicalRecordRepository {
 
     // Laisser comme ça 
     public MedicalRecordEntity updateMedicalRecord(MedicalRecordEntity medicalUpdate) {
-
-        return medicalUpdate;
+        listMedicalRecord = getMedicalRecordList();
+        MedicalRecordEntity medicalUpdated = new MedicalRecordEntity();
+        for (MedicalRecordEntity medicalRecordEntity : listMedicalRecord) {
+            if (medicalRecordEntity.getLastName().equalsIgnoreCase(medicalUpdate.getLastName())
+            && medicalRecordEntity.getFirstName().equalsIgnoreCase(medicalUpdate.getFirstName())) {
+                medicalRecordEntity.setBirthdate(medicalUpdate.getBirthdate());
+                medicalRecordEntity.setMedications(medicalUpdate.getMedications());
+                medicalRecordEntity.setAllergies(medicalUpdate.getAllergies());
+            }
+              return medicalUpdate;
+        }
+        return medicalUpdated;
     }
 
     public MedicalRecordEntity findByLastNameAndFirstName(String lastName, String firstName) {
@@ -67,4 +77,14 @@ public class MedicalRecordRepository {
     }
 
 
+    public MedicalRecordEntity findByLastName(String lastName) {
+        listMedicalRecord = getMedicalRecordList();
+        for(MedicalRecordEntity medicalRecordEntity : listMedicalRecord) {
+            if(medicalRecordEntity.getLastName().equals(lastName)) {
+                return medicalRecordEntity;
+            }
+        }
+        return null;
+    }
+    
 }

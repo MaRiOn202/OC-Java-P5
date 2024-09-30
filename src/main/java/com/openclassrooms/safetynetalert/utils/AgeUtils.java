@@ -1,33 +1,45 @@
 package com.openclassrooms.safetynetalert.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
+@Slf4j
 @Component
 public class AgeUtils {
 
     public long getAge(String birthdate) {
 
-        LocalDate currentTime = LocalDate.now();
-        LocalDate birthdayTime = LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(birthdate) );
-        Duration result =  Duration.between(currentTime,birthdayTime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        long age = 0;
+        try {
+            log.info("birthdate {}", birthdate);
+            // Convertir la chaîne de caractères en LocalDate
+            LocalDateTime birthdayTime = LocalDate.parse(birthdate, formatter).atStartOfDay();
+            // Obtenir la date actuelle
+            LocalDateTime currentTime = LocalDateTime.now();
+            log.info("currentTime {}", currentTime);
+            log.info("birthdayTime {}", birthdayTime);
+            Duration resultDuration =  Duration.between(birthdayTime, currentTime);
 
-        long age = result.toDays()/365;
+            age = resultDuration.toDays()/365;
+
+        } catch (DateTimeParseException ex){
+            log.error("Error : {}", ex);
+        }
 
         return age;
     }
 
     //  calcule si une personne est mineure ou pas sous forme de booléen
-    public boolean getMinor(String birthdate) {
+    public boolean getMinor(String birthdate)  {
 
-        LocalDate currentTime = LocalDate.now();
-        LocalDate birthdayTime = LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(birthdate) );
-        Duration result =  Duration.between(currentTime,birthdayTime);
-
-        if(result.toDays()/365 <= 18 ) {
+        if(getAge(birthdate) <= 18 ) {
             return true;
         }
         return false;

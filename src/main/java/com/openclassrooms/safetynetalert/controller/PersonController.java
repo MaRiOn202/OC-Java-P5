@@ -30,17 +30,20 @@ public class PersonController {
 
 
     @PostMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PersonModel addPerson(@NotNull @RequestBody PersonModel personModel) {
-       // this.personService.addPerson(personModel);
-        return personService.addPerson(personModel);
+    public ResponseEntity<PersonModel> addPerson(@NotNull @RequestBody PersonModel personModel) {
+        log.info("URL : http://localhost:8080/person?personModel="+personModel);
+        personService.addPerson(personModel);
+        return new ResponseEntity<>(personModel, HttpStatus.CREATED);
 /*        return ResponseEntity.status(HttpStatus.OK)
                 .body(person.getLastName() + " "
                         + person.getFirstName() + " a bien été créée. ");*/
+        //return personModel;
     }
 
     @PutMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
     public PersonModel updatePerson(@NotNull
             @RequestBody PersonModel personModel) {
+        log.info("URL : http://localhost:8080/person?personModel="+personModel);
 
         return personService.updatePerson(personModel);
     }
@@ -50,7 +53,6 @@ public class PersonController {
                                @RequestParam(name = "firstName", required = true) String firstName) {
         
         log.info("URL : http://localhost:8080/person?lastName="+lastName+"&firstName"+firstName);
-        // this.personService.deletePerson(lastName,firstName);
          return personService.deletePerson(lastName, firstName);
 /*        return ResponseEntity.status(HttpStatus.OK).body(lastName + " "
         + firstName + " a bien été supprimé. ");*/
@@ -83,7 +85,7 @@ public class PersonController {
     public ResponseEntity<List<PersonInfoModel>> getPersonInfo(@NotNull @RequestParam (name = "lastName", required = true) String lastName,
                                                                @RequestParam(name = "firstName", required = true) String firstName) {
 
-        log.info("URL : http://localhost:8080/personInfo?lastName="+lastName+"&firstName"+firstName);
+        log.info("URL : http://localhost:8080/personInfo?lastName="+lastName+"&firstName="+firstName);
         return ResponseEntity.status(HttpStatus.OK).body(personService
                 .getPersonInfo(lastName, firstName));
     }

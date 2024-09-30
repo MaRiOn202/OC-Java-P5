@@ -31,11 +31,22 @@ public class PersonRepository {
 
     // Laisser comme cela
     public PersonEntity updatePerson(PersonEntity personUpdate) {
-
-        return personUpdate;
+        listPerson = getPersonList();
+        PersonEntity personUpdated = new PersonEntity();
+        for(PersonEntity personEntity : listPerson) {
+            if (personEntity.getLastName().equalsIgnoreCase(personUpdate.getLastName()) &&
+                    personEntity.getFirstName().equalsIgnoreCase(personUpdate.getFirstName())) {
+                personEntity.setAddress(personUpdate.getAddress());
+                personEntity.setCity(personUpdate.getCity());
+                personEntity.setZip(personUpdate.getZip());
+                personEntity.setPhone(personUpdate.getPhone());
+                personEntity.setEmail(personUpdate.getEmail());
+            }
+                return personUpdate;
+        }
+        return personUpdated;
     }
-
-
+    
     public Boolean deletePerson(String lastName, String firstName) {
         listPerson = getPersonList();
         for (PersonEntity person : listPerson) {

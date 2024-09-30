@@ -2,6 +2,7 @@ package com.openclassrooms.safetynetalert.repository;
 
 import com.openclassrooms.safetynetalert.entity.FireStationEntity;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class FireStationRepository {
 
     @Autowired
@@ -38,7 +40,15 @@ public class FireStationRepository {
 
     // A LAISSER
     public FireStationEntity updateFireStation(FireStationEntity fireStationUpdate) {
-        return fireStationUpdate;
+        listFireStation = getFireStationList();
+        FireStationEntity fireStationUpdated = new FireStationEntity();
+        for(FireStationEntity fireStationEntity : listFireStation) {
+            if(fireStationEntity.getAddress().equalsIgnoreCase(fireStationUpdate.getAddress())) {
+                fireStationEntity.setStation(fireStationUpdate.getStation());
+            }
+             return fireStationUpdate;
+        }
+        return fireStationUpdated;
     }
 
     
@@ -65,6 +75,7 @@ public class FireStationRepository {
     public FireStationEntity findByAddress(String address) {
         listFireStation = getFireStationList();
         for (FireStationEntity fireStation : listFireStation) {
+            log.info("fireStation.getAddress(): {}", fireStation.getAddress());
             if (fireStation.getAddress().equals(address))
                 return fireStation;
         }

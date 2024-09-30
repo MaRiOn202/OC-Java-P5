@@ -48,15 +48,15 @@ public class FireStationServiceTest {
     @Mock
     AgeUtils age;
 
-    @Mock
-    PersonMapper personMapper;
-
     
      // il faut l'initialiser important
    //private static final List<FireStationModel> listFireStation = new ArrayList<>();
-     private static final List<PersonEntity> listPerson  = new ArrayList<>();
-    private static final List<FireStationEntity> listFireStation  = new ArrayList<>();
-    private static final List<MedicalRecordEntity> listMedicalRecord = new ArrayList<>();
+     private List<PersonEntity> listPerson  = new ArrayList<>();
+    private List<FireStationEntity> listFireStation  = new ArrayList<>();
+    private List<MedicalRecordEntity> listMedicalRecord = new ArrayList<>();
+
+    private FireStationModel fireStationModelActual = new FireStationModel();
+    private FireStationModel fireStationModelExpected = new FireStationModel();
 
 
    @BeforeEach
@@ -68,13 +68,13 @@ public class FireStationServiceTest {
 
         person1.setLastName("lastName1");
         person1.setFirstName("firstName1");
-        person1.setPhone("phone1");
-        person1.setAddress("Address1");
+        person1.setPhone("999-999-999");
+        person1.setAddress("Paris");
 
         person2.setLastName("lastName2");
         person2.setFirstName("firstName2");
-        person2.setPhone("phone2");
-        person2.setAddress("Address1");
+        person2.setPhone("888-888-888");
+        person2.setAddress("Brest");
 
         listPerson.add(person1);
         listPerson.add(person2);
@@ -84,12 +84,12 @@ public class FireStationServiceTest {
       FireStationEntity fireStation1 = new FireStationEntity();
       FireStationEntity fireStation2 = new FireStationEntity();
 
-      fireStation1.setStation("station1");
-      fireStation1.setAddress("Address1");
+      fireStation1.setStation("3");
+      fireStation1.setAddress("Paris");
       listFireStation.add(fireStation1);
 
-      fireStation2.setStation("station2");
-      fireStation2.setAddress("Address2");
+      fireStation2.setStation("2");
+      fireStation2.setAddress("Lille");
       listFireStation.add(fireStation2);
 
        // Création de MedicalRecordEntity des 2 Person créées
@@ -125,43 +125,44 @@ public class FireStationServiceTest {
        personCovertModel1.setFirstName("firstName1");
        listPersonCovert.add(personCovertModel1);
 
+       // Création d'une FireStationModel
+       fireStationModelExpected = new FireStationModel();
+       fireStationModelExpected.setAddress("644 Gershwin Cir");
+       fireStationModelExpected.setStation("4");
+       
+       fireStationModelActual = new FireStationModel();
+       fireStationModelActual.setAddress("644 Gershwin Cir");
+       fireStationModelActual.setStation("4");
+
     }
 
     @Test
-    void testAddFireStation() {
-
-        FireStationModel fireStationModel = new FireStationModel();
-        fireStationModel.setAddress("Address1");
-        fireStationModel.setStation("1");
+    void testAddFireStationShouldReturnFireStationModel() {
 
         FireStationEntity fireStationEntity = new FireStationEntity();
-        fireStationEntity.setAddress("Address1");
-        fireStationEntity.setStation("1");
-        // ces deux block seront à suppr du test du coup 
-
+        fireStationEntity.setAddress("644 Gershwin Cir");
+        fireStationEntity.setStation("4");
+        
         when(fireStationRepository.addFireStation(any(FireStationEntity.class))).thenReturn(fireStationEntity);
+        FireStationModel result = fireStationImpl.addFireStation(fireStationModelActual);
 
-        FireStationModel result = fireStationImpl.addFireStation(fireStationModel);
-
-        assertEquals("Address1", result.getAddress());
-        assertEquals("1", result.getStation());
-        verify(fireStationRepository, times(1)).addFireStation(any(FireStationEntity.class));
+        assertEquals(fireStationModelExpected, result);
     }
 
 
     @Test
     void testUpdateFireStation() {
-       FireStationModel fireStationModel1 = new FireStationModel();  //caserne récupérée
+       FireStationModel fireStationModel1 = new FireStationModel();  
        fireStationModel1.setAddress("address1");
-       fireStationModel1.setStation("1");
+       fireStationModel1.setStation("1");        // nvelle station à update
 
-       FireStationEntity fireStationEntity1 = new FireStationEntity();  // caserne à modifier
+       FireStationEntity fireStationEntity1 = new FireStationEntity();  // caserne recup dans bdd
        fireStationEntity1.setAddress("address1");
-       fireStationModel1.setStation("2");
+       fireStationModel1.setStation("2");           //ancien num
 
        FireStationEntity fireStationUpdate = new FireStationEntity();  // caserne updated
        fireStationUpdate.setAddress("address1");
-       fireStationUpdate.setStation("1");
+       fireStationUpdate.setStation("1");             // nveau num updated
 
        when(fireStationRepository.findByAddress("address1")).thenReturn(fireStationEntity1);
        when(fireStationRepository.updateFireStation(fireStationEntity1)).thenReturn(fireStationUpdate);
@@ -191,8 +192,8 @@ public class FireStationServiceTest {
       when(fireStationRepository.findByStation("1")).thenReturn(listFireStation);
       List<String> phoneList = fireStationImpl.getPhoneAlert("1");
 
-      assertEquals(2, phoneList.size());
-      assertEquals("phone2", phoneList.get(1));
+      assertEquals(1, phoneList.size());
+      assertEquals("999-999-999", phoneList.get(0));
       verify(fireStationRepository, times(1)).findByStation("1");
 
     }
@@ -240,6 +241,8 @@ public class FireStationServiceTest {
      fireMembersModel2.setLastname("lastName2");
      fireMembersModel2.setFirstname("firstName2");
 
+     long resultAge = age.getAge(medicalRecordEntity1.getBirthdate());
+
      // Lecture des différentes méthodes avec jeux de données fictifs
      when(personRepository.findByAddress(address)).thenReturn(listPerson);
      when(fireStationRepository.findByAddress(address)).thenReturn(fireStation1);
@@ -249,9 +252,9 @@ public class FireStationServiceTest {
              ("lastName2", "firstName2")).thenReturn(medicalRecordEntity2);
      // liste de personEntity et medicalEntity
      when(fireStationMapper.mapToFireMembersModel
-             (person1, medicalRecordEntity1)).thenReturn(fireMembersModel1);
+             (resultAge,person1, medicalRecordEntity1)).thenReturn(fireMembersModel1);
      when(fireStationMapper.mapToFireMembersModel
-             (person2, medicalRecordEntity2)).thenReturn(fireMembersModel2);
+             (resultAge,person2, medicalRecordEntity2)).thenReturn(fireMembersModel2);
 
      FireModel result = fireStationImpl.getFireMembersAddress(address);
 
@@ -266,7 +269,7 @@ public class FireStationServiceTest {
      verify(personRepository, times(1)).findByAddress(address);
      verify(fireStationRepository, times(1)).findByAddress(address);
      verify(medicalRecordRepository, times(1)).findByLastNameAndFirstName("lastName1", "firstName1");
-     verify(fireStationMapper, times(1)).mapToFireMembersModel(person1, medicalRecordEntity1);
+     verify(fireStationMapper, times(1)).mapToFireMembersModel(resultAge,person1, medicalRecordEntity1);
     }
 
 /*    @Test

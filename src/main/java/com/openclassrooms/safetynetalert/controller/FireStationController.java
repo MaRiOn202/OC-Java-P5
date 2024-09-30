@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/firestation")
 public class FireStationController {
 
 
@@ -34,26 +33,27 @@ public class FireStationController {
 
 
     @PostMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
-    public FireStationModel addFireStation(@NotNull @RequestBody FireStationModel fireStationModel) {
+    public ResponseEntity<FireStationModel> addFireStation(@NotNull @RequestBody FireStationModel fireStationModel) {
         log.info("URL : http://localhost:8080/firestation?fireStationModel="+fireStationModel);
-        return fireStationService.addFireStation(fireStationModel);
-/*        return ResponseEntity.status(HttpStatus.OK)
-                .body("La station n°"+ fireStationModel.getStation()
-                + " située au "
-                + fireStationModel.getAddress() + " a bien été créée. " );*/
+        fireStationService.addFireStation(fireStationModel);
+       return new ResponseEntity<>(fireStationModel, HttpStatus.CREATED);
+               //ResponseEntity.status(HttpStatus.OK)
+               // .body("La station n°"+ fireStationModel.getStation()
+                //+ " située au "
+                //+ fireStationModel.getAddress() + " a bien été créée. " );
     }
 
      @PutMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
      public FireStationModel updateFireStation(@NotNull
-             @RequestParam(name = "address", required = true) FireStationModel fireStationModel) {
-
-             ///
+             @RequestBody FireStationModel fireStationModel) {
+     log.info("URL : http://localhost:8080/firestation?fireStationModel="+fireStationModel);
+             
         return fireStationService.updateFireStation(fireStationModel);
      }
 
 
 
-    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE )
+    @DeleteMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
     public Boolean deleteFireStation(
             @RequestParam(name = "address", required = true) String address) {
 
@@ -75,7 +75,7 @@ public class FireStationController {
     @GetMapping(value = "/phoneAlert", produces = MediaType.APPLICATION_JSON_VALUE )
     public List<String> getPhoneAlert(@NotNull @RequestParam (name = "stationNumber",
             required = true) String stationNumber) {
-        log.info("URL : http://localhost:8080/phoneAlert?firestation"+stationNumber);
+        log.info("URL : http://localhost:8080/phoneAlert?stationNumber="+stationNumber);
         return fireStationService.getPhoneAlert(stationNumber);
     }
 

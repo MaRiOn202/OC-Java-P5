@@ -22,47 +22,44 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     private final MedicalRecordMapper medicalMapper;
 
     private static final Logger log = LoggerFactory.getLogger(MedicalRecordServiceImpl.class);
-
-/*    @Override
-    public List<MedicalRecordEntity> getMedicalRecordList() {
-
-        return medicalRecordRepository.getMedicalRecordList();
-    }*/
+    
 
     @Override
     public MedicalRecordModel addMedicalRecord(MedicalRecordModel medicalRecordM) {
         MedicalRecordEntity medicalRecordEntity  = new MedicalRecordEntity();
+        medicalRecordEntity = medicalMapper.mapToMedicalRecordEntity(medicalRecordM);
 /*        medicalRecordEntity.setLastName(medicalRecordM.getLastName());
         medicalRecordEntity.setFirstName(medicalRecordM.getFirstName());
         medicalRecordEntity.setBirthdate(medicalRecordM.getBirthdate());
         medicalRecordEntity.setMedications(medicalRecordM.getMedications());
         medicalRecordEntity.setAllergies(medicalRecordM.getAllergies());*/    // Model en Entity
-        medicalMapper.mapToMedicalRecordEntity(medicalRecordM);
 
         MedicalRecordEntity mre = medicalRecordRepository.addMedicalRecord(medicalRecordEntity);
-        MedicalRecordModel medicalRecordModel = new MedicalRecordModel();
-        medicalRecordModel.setLastName(mre.getLastName());
+        MedicalRecordModel medicalRecordModel = medicalMapper.mapToMedicalRecordModel(mre);
+/*        medicalRecordModel.setLastName(mre.getLastName());
         medicalRecordModel.setFirstName(mre.getFirstName());
         medicalRecordModel.setBirthdate(mre.getBirthdate());
         medicalRecordModel.setMedications(mre.getMedications());
-        medicalRecordModel.setAllergies(mre.getAllergies());
-        // medicalMapper.mapToMedicalRecordModel(mre);
-
+        medicalRecordModel.setAllergies(mre.getAllergies());*/
+        log.info("Le carnet de santé a bien été créé !" );
         return medicalRecordModel;
     }
 
     @Override
     public MedicalRecordModel updateMedicalRecord(MedicalRecordModel medicalRecordModel) {
-        // à faire
-        MedicalRecordEntity medicalUpdate = medicalRecordRepository.findByLastNameAndFirstName
-                (medicalRecordModel.getLastName(), medicalRecordModel.getFirstName());
-        medicalUpdate.setLastName(medicalRecordModel.getLastName());
+
+        MedicalRecordEntity medicalUpdate =
+                medicalRecordRepository.findByLastNameAndFirstName(medicalRecordModel.getLastName(), medicalRecordModel.getFirstName());
+
+/*        medicalUpdate.setLastName(medicalRecordModel.getLastName());
         medicalUpdate.setFirstName(medicalRecordModel.getFirstName());
         medicalUpdate.setBirthdate(medicalRecordModel.getBirthdate());
         medicalUpdate.setMedications(medicalRecordModel.getMedications());
-        medicalUpdate.setAllergies(medicalRecordModel.getAllergies());
+        medicalUpdate.setAllergies(medicalRecordModel.getAllergies());*/
+        medicalUpdate = medicalMapper.mapToMedicalRecordEntity(medicalRecordModel);
         medicalUpdate = medicalRecordRepository.updateMedicalRecord(medicalUpdate);
         MedicalRecordModel medicalReturn = medicalMapper.mapToMedicalRecordModel(medicalUpdate);
+        log.info("Le carnet de santé a bien été modifié !" );
         return medicalReturn;
     }
 
@@ -75,11 +72,8 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
             //slf4j log à utiliser // log.info
             log.info("Le carnet de santé de " + lastName + " " + firstName + " a bien été supprimé");
         } else {
-            log.info("Le carnet de santé de " + lastName + " " + firstName + " n'a pas été supprimée");
+            log.info("Le carnet de santé de " + lastName + " " + firstName + " n'a pas été supprimé");
         }
         return medicalRecordDeleted;
     }
-
-
-
 }

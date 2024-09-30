@@ -13,8 +13,6 @@ import java.util.Map;
 
 
 public interface PersonService {
-
-    //List<PersonModel> getPersonList();
     
     PersonModel addPerson(PersonModel personModel);
 

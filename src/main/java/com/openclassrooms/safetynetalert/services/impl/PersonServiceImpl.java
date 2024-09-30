@@ -56,44 +56,30 @@ public class PersonServiceImpl implements PersonService {
     public PersonModel addPerson(PersonModel personM) {
         PersonEntity personEntity = new PersonEntity();
          personEntity = personMapper.mapToPersonEntity(personM);
-    /*    PersonEntity personEntity = new PersonEntity();
-        personEntity.setLastName(personM.getLastName());
-        personEntity.setFirstName(personM.getFirstName());
-        personEntity.setAddress(personM.getAddress());
-        personEntity.setCity(personM.getCity());
-        personEntity.setZip(personM.getZip());
-        personEntity.setPhone(personM.getPhone());
-        personEntity.setEmail(personM.getEmail());*/                //   model en entity
 
         PersonEntity pe = personRepository.addPerson(personEntity);
 
         PersonModel personModel = personMapper.mapToPersonModel(pe);    //  entity en model
-/*        personModel.setLastName(pe.getLastName());
-        personModel.setFirstName(pe.getFirstName());
-        personModel.setAddress(pe.getAddress());
-        personModel.setCity(pe.getCity());
-        personModel.setZip(pe.getZip());
-        personModel.setEmail(pe.getEmail());*/
 
-        log.info("New person saved !");                                                          //Ok
+        log.info("La personne a bien été créée !" );                                                          //Ok
         return personModel;
     }
 
     @Override
     public PersonModel updatePerson(PersonModel personModel) {
         PersonEntity personUpdate =
-                personRepository.findByLastNameAndFirstName(personModel.getLastName(), personModel.getFirstName());
-        personUpdate.setAddress(personModel.getAddress());
+                personRepository.findByLastNameAndFirstName(
+                        personModel.getLastName(), personModel.getFirstName());
+/*        personUpdate.setAddress(personModel.getAddress());
         personUpdate.setCity(personModel.getCity());
         personUpdate.setPhone(personModel.getPhone());
         personUpdate.setEmail(personModel.getEmail());
-        personUpdate.setZip(personModel.getZip());               // Model en entity
-        //A VERIFIER
-        //personMapper.mapToPersonEntity(personModel);
-
+        personUpdate.setZip(personModel.getZip());*/               // Model en entity
+        personUpdate = personMapper.mapToPersonEntity(personModel);
         //sauvegarder
         personUpdate = personRepository.updatePerson(personUpdate);
         PersonModel personReturn = personMapper.mapToPersonModel(personUpdate);
+        log.info("La personne a bien été mise à jour !" );
         return personReturn;
     }
 
@@ -148,6 +134,7 @@ public class PersonServiceImpl implements PersonService {
             List<PersonModel> listPersonFamily = listPerson
                     .stream()
                     .filter(person -> person.getLastName().equals(childModel.getLastName()))
+                    //.map(personEntity -> personMapper.mapToPersonModel(personEntity))
                     .map(personEntity -> new PersonModel(
                             personEntity.getFirstName(),
                             personEntity.getLastName(),
@@ -218,11 +205,9 @@ public class PersonServiceImpl implements PersonService {
 
                    // On récupère age, medications et allergies de MRE
                    long resultAge = age.getAge(medicalRecordEntity.getBirthdate());
-                   List<String> medications = medicalRecordEntity.getMedications();
-                   List<String> allergies = medicalRecordEntity.getAllergies();
-
-                   // A DEMANDER       !!!!
-                   return personMapper.mapToPersonInfoModel(personEntity, medicalRecordEntity);
+                   
+                   return personMapper.mapToPersonInfoModel
+                           (resultAge,personEntity, medicalRecordEntity);
   /*                 return new PersonInfoModel(
                            personEntity.getFirstName(),
                            personEntity.getLastName(),
@@ -244,11 +229,12 @@ public class PersonServiceImpl implements PersonService {
 
     // URL n° 6 : http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
     @Override
-    public List<PersonInfoModel> getPersonInfo(String firstName, String lastName) {
+    public List<PersonInfoModel> getPersonInfo(String lastName, String firstName) {
 
+        log.info("LastName {},  FirstName {}",lastName, firstName );
         List<PersonEntity> listPerson = personRepository.getPersonList();
-        List<MedicalRecordEntity> listMedicalRecordEntities = medicalRecordRepository.getMedicalRecordList();
 
+         log.info(listPerson.toString() );
         // Récupère la liste des personnes ayant le même nom
         List<PersonModel> personWithSameName = new ArrayList<>();
 
@@ -256,32 +242,41 @@ public class PersonServiceImpl implements PersonService {
             if (personEntity.getLastName()
                     .equals(lastName)) {
                 personWithSameName.add(personMapper.mapToPersonModel(personEntity));
-            }
+            } 
         }
-        
-        // récupère une liste de à partir des données de la classe MR
-        for (PersonModel personModel : personWithSameName)   {
-            MedicalRecordEntity result = medicalRecordRepository
-                    .findByLastNameAndFirstName(personModel.getLastName(), personModel
-                            .getFirstName());
-            listMedicalRecordEntities.add(result);
+
+        if(!personWithSameName.stream().anyMatch(personModel ->
+                personModel.getLastName().equals(lastName))) {
+            return null;
+        }
+        // au moins une personne portant le nom et le prénom demandé
+        if(!personWithSameName.stream().anyMatch(personModel ->
+                (personModel.getLastName().equals(lastName)
+                && personModel.getFirstName().equals(firstName)))) {
+            return null;
         }
 
         // On souhaite récupérer les paramètres de MREntity
         List<PersonInfoModel> listPersonInfoModel = new ArrayList<>();
 
-        for (MedicalRecordEntity medicalRecordEntity : listMedicalRecordEntities) {
-            PersonInfoModel personInfoModel = new PersonInfoModel();
-            personInfoModel.setFirstName(medicalRecordEntity.getFirstName());
-            personInfoModel.setLastName(medicalRecordEntity.getLastName());
-            //PersonEntity personEntity = getPersonEntityWithMedicalRecord(medicalRecordEntity, personWithSameName);
-            PersonEntity personEntity = personRepository.findByLastNameAndFirstName(lastName, firstName);
-            personInfoModel.setAddress(personEntity.getAddress());
-            personInfoModel.setEmail(personEntity.getEmail());
-            personInfoModel.setAge(age.getAge(medicalRecordEntity.getBirthdate()));
-            personInfoModel.setMedications(medicalRecordEntity.getMedications());
-            personInfoModel.setAllergies(medicalRecordEntity.getAllergies());
-            listPersonInfoModel.add(personInfoModel);
+        // récupère une liste de à partir des données de la classe MR
+        for (PersonModel personModel : personWithSameName)   {
+
+            MedicalRecordEntity result = medicalRecordRepository
+                    .findByLastName(personModel.getLastName());
+            long resultAge = age.getAge(result.getBirthdate());
+            listPersonInfoModel.add(personMapper.mapToPersonInfoModel
+                    (personModel, resultAge, result));
+            
+/*            PersonInfoModel personInfoModel = new PersonInfoModel();
+            personInfoModel.setLastName(personModel.getLastName());
+            personInfoModel.setFirstName(personModel.getFirstName());
+            personInfoModel.setAddress(personModel.getAddress());
+            personInfoModel.setEmail(personModel.getEmail());
+            personInfoModel.setAge(age.getAge(result.getBirthdate()));
+            personInfoModel.setMedications(result.getMedications());
+            personInfoModel.setAllergies(result.getAllergies());
+            listPersonInfoModel.add(personInfoModel);*/
         }
         return listPersonInfoModel;
 

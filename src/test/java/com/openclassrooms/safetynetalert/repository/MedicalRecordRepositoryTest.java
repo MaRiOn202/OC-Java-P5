@@ -59,7 +59,7 @@ public class MedicalRecordRepositoryTest {
     @Test
     void testMedicalRecordRepositoryRemoveMedicalRecord() {
 
-       Boolean result = medicalRecordRepository.deleteMedicalRecord("John", "Boyd" );
+       Boolean result = medicalRecordRepository.deleteMedicalRecord("Boyd", "John" );
        List<MedicalRecordEntity> listMedicalRecord = medicalRecordRepository.getMedicalRecordList();
        log.info("Résultat : {} {}", result, listMedicalRecord);
 
@@ -79,13 +79,5 @@ public class MedicalRecordRepositoryTest {
         assertEquals("John", medicalRecord.getFirstName());
         
     }
-
-
-
-
-
-
-
-
 
 }

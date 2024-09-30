@@ -10,7 +10,6 @@ import com.openclassrooms.safetynetalert.repository.FireStationRepository;
 import com.openclassrooms.safetynetalert.repository.MedicalRecordRepository;
 import com.openclassrooms.safetynetalert.repository.PersonRepository;
 import com.openclassrooms.safetynetalert.services.FireStationService;
-import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +24,7 @@ import java.util.List;
 @Service
 public class FireStationImpl implements FireStationService {
 
-    @Autowired
-    public SerializationDriver serializationDriver;
+
 
     @Autowired
     private FireStationRepository fireStationRepository;
@@ -59,6 +57,7 @@ public class FireStationImpl implements FireStationService {
         FireStationModel fireStationModel = new FireStationModel();
         fireStationModel.setAddress(fse.getAddress());
         fireStationModel.setStation(fse.getStation());
+        log.info("La caserne de pompier a bien été créée !" );
         return fireStationModel;
     }
 
@@ -71,8 +70,10 @@ public class FireStationImpl implements FireStationService {
         
         // fireStationEntity en FSModel
         FireStationModel stationUpdated =  new FireStationModel();
+        stationUpdated.setAddress(fireStationUpdate.getAddress());
         stationUpdated.setStation(fireStationUpdate.getStation());
         // donc mapper mapToFireStationModel
+        log.info("La caserne de pompier a bien été mise à jour !" );
         return stationUpdated;
     }
 
@@ -122,7 +123,7 @@ public class FireStationImpl implements FireStationService {
             listMedicalRecord.add(medicalRecordEntity);                      //recupere un objet
         }
 
-        // permet de déterminer l'âge des individus et distinguer enfants/adultes  + nbre
+        // permet de déterminer l'âge des individus et distinguer enfants/adultes + nbre
         numberOfChildren =  listMedicalRecord
                 .stream()
                 .filter(medicalRecord -> age.getMinor(medicalRecord.getBirthdate()))
@@ -130,10 +131,9 @@ public class FireStationImpl implements FireStationService {
 
         numberOfAdult = listMedicalRecord
                 .stream()
-                .filter(medicalRecord -> age.getMinor(medicalRecord.getBirthdate()))      //filtre sur false
+                .filter(medicalRecord -> !age.getMinor(medicalRecord.getBirthdate()))      //filtre sur false
                 .count();
-
-
+        
         //retourner l'objet PersonFireStation
         // retourne le résultat à savoir listHabitant + nbre enfants et nbre adultes
         PersonFireStationModel pfsm = new PersonFireStationModel();
@@ -198,6 +198,7 @@ public class FireStationImpl implements FireStationService {
     @Override
     public FireModel getFireMembersAddress(String address) {
 
+        log.info("address: {}", address);
         List<PersonEntity> listPerson = personRepository.findByAddress(address);
         FireStationEntity fireStationEntity = fireStationRepository.findByAddress(address);
 
@@ -214,11 +215,13 @@ public class FireStationImpl implements FireStationService {
             fireMembersModel.setMedications(medicalRecordEntity.getMedications());
             fireMembersModel.setAllergies(medicalRecordEntity.getAllergies());
             listFireMembersModel.add(fireMembersModel);*/
+            
             MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
                     .findByLastNameAndFirstName
                             (personEntity.getLastName(), personEntity.getFirstName());
+            long resultAge = age.getAge(medicalRecordEntity.getBirthdate());
             listFireMembersModel.add(fireStationMapper.mapToFireMembersModel
-                    (personEntity, medicalRecordEntity));
+                    (resultAge, personEntity, medicalRecordEntity));
         }
 
         FireModel fireModel = new FireModel();
@@ -227,8 +230,5 @@ public class FireStationImpl implements FireStationService {
 
         return fireModel;
     }
-
-
-
-
+    
 }
