@@ -44,23 +44,23 @@ public class FireStationController {
     }
 
      @PutMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
-     public FireStationModel updateFireStation(@NotNull
+     public ResponseEntity<FireStationModel> updateFireStation(@NotNull
              @RequestBody FireStationModel fireStationModel) {
      log.info("URL : http://localhost:8080/firestation?fireStationModel="+fireStationModel);
-             
-        return fireStationService.updateFireStation(fireStationModel);
+     fireStationService.updateFireStation(fireStationModel);
+
+         return new ResponseEntity<>(fireStationModel, HttpStatus.OK);
      }
 
-
-
     @DeleteMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
-    public Boolean deleteFireStation(
+    public ResponseEntity<Boolean> deleteFireStation(
             @RequestParam(name = "address", required = true) String address) {
 
         log.info("URL : http://localhost:8080/firestation?address="+address);
 
        // return ResponseEntity.status(HttpStatus.OK).body("La caserne se situant au " + address + " a bien été supprimée. " );
-        return fireStationService.deleteFireStation(address);
+        fireStationService.deleteFireStation(address);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

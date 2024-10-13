@@ -116,6 +116,13 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<exclude>com/openclassrooms/safetynetalert/utils/*</exclude>
+						<exclude>com/openclassrooms/safetynetalert/mapper/*</exclude>
+						<exclude>**/model/*</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -123,6 +130,7 @@
 				<version>3.2.3</version>
 				<configuration>
 					<excludes>
+						<exclude>**/*IT.java</exclude>
 						<exclude>**/*IT.java</exclude>
 					</excludes>
 				</configuration>
@@ -135,7 +143,9 @@
 						<phase>integration-test</phase>
 						<configuration>
 							<excludes>
-								<exclude>none</exclude>
+								<exclude>com/openclassrooms/safetynetalert/utils/*</exclude>
+								<exclude>com/openclassrooms/safetynetalert/mapper/*</exclude>
+								<exclude>**/model/*</exclude>
 							</excludes>
 							<includes>
 								<include>**/*IT.java</include>

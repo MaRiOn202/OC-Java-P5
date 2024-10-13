@@ -1,6 +1,7 @@
 package com.openclassrooms.safetynetalert.repository;
 
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
+import com.openclassrooms.safetynetalert.exception.FileNotReadException;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class MedicalRecordRepositoryTest {
 
 
     @BeforeEach
-    void init() throws IOException {
+    void init() throws FileNotReadException {
         SerializationDriver serializationDriver = new SerializationDriver();
         medicalRecordRepository = new MedicalRecordRepository(serializationDriver);
     }

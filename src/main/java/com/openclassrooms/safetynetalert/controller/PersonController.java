@@ -41,21 +41,20 @@ public class PersonController {
     }
 
     @PutMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PersonModel updatePerson(@NotNull
+    public ResponseEntity<PersonModel> updatePerson(@NotNull
             @RequestBody PersonModel personModel) {
         log.info("URL : http://localhost:8080/person?personModel="+personModel);
-
-        return personService.updatePerson(personModel);
+        personService.updatePerson(personModel);
+        return new ResponseEntity<>(personModel, HttpStatus.OK);
     }
     
     @DeleteMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Boolean deletePerson(@RequestParam(name = "lastName", required = true) String lastName,
+    public ResponseEntity<Boolean> deletePerson(@RequestParam(name = "lastName", required = true) String lastName,
                                @RequestParam(name = "firstName", required = true) String firstName) {
         
         log.info("URL : http://localhost:8080/person?lastName="+lastName+"&firstName"+firstName);
-         return personService.deletePerson(lastName, firstName);
-/*        return ResponseEntity.status(HttpStatus.OK).body(lastName + " "
-        + firstName + " a bien été supprimé. ");*/
+         personService.deletePerson(lastName, firstName);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

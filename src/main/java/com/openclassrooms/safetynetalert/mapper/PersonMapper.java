@@ -25,8 +25,8 @@ public class PersonMapper {
         PersonCovertModel personCovertModel = new PersonCovertModel();
         personCovertModel.setFirstName(personEntity.getFirstName());
         personCovertModel.setLastName(personEntity.getLastName());
-        personCovertModel.setPhone(personEntity.getPhone());
         personCovertModel.setAddress(personEntity.getAddress());
+        personCovertModel.setPhone(personEntity.getPhone());
         return personCovertModel;
 
     }

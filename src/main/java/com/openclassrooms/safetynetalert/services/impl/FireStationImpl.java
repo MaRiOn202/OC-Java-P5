@@ -155,14 +155,14 @@ public class FireStationImpl implements FireStationService {
 
 
     /**
+     *   URL n°3  http://localhost:8080/phoneAlert?firestation=<firestation_number>
+     *
      *   Renvoie une liste des numéros de téléphone des habitants desservie
      *   par la caserne de pompier correspondante
      *   
      * @param stationNumber
-     * @return
+     * @return List<String> 
      */
-
-    // URL n°3  http://localhost:8080/phoneAlert?firestation=<firestation_number>
     @Override
     public List<String> getPhoneAlert(String stationNumber) {
 

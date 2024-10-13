@@ -56,16 +56,6 @@ public class MedicalRecordRepository {
        return null;              // cours optional.empty https://medium.com/@JeremieGottero/optional-en-java-quand-lutiliser-et-quand-ne-pas-l-utiliser-9bc759e162cd
     }
 
-
-/*    public MedicalRecord findAll(String firstName, String lastName, String birthdate, List<String> medications,
-                                 List<String> allergies) {
-       for (MedicalRecord medicalRecord : listMedicalRecord) {
-           if (medicalRecord.getLastName().equals(lastName))
-               return medicalRecord;
-       }
-       return new MedicalRecord();
-    }*/
-
     public Boolean deleteMedicalRecord(String lastName, String firstName) {
         listMedicalRecord = getMedicalRecordList();
         for ( MedicalRecordEntity medicalRecord : listMedicalRecord) {
@@ -75,7 +65,6 @@ public class MedicalRecordRepository {
         }
         return false;
     }
-
 
     public MedicalRecordEntity findByLastName(String lastName) {
         listMedicalRecord = getMedicalRecordList();

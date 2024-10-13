@@ -34,33 +34,23 @@ public class MedicalRecordController {
     }
 
     @PutMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
-    public MedicalRecordModel updateMedicalRecord(
+    public ResponseEntity<MedicalRecordModel> updateMedicalRecord(
             @NotNull
             @RequestBody MedicalRecordModel medicalRecordModel) {
     log.info("URL : http://localhost:8080/medicalRecord?medicalRecordModel="+medicalRecordModel);
-        return medicalRecordService.updateMedicalRecord(medicalRecordModel);
+        medicalRecordService.updateMedicalRecord(medicalRecordModel);
+        return new ResponseEntity<>(medicalRecordModel, HttpStatus.OK);
     }
     
     @DeleteMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
-    public Boolean deleteMedicalRecord(@RequestParam(name = "lastName", required = true) String lastName,
+    public ResponseEntity<Boolean> deleteMedicalRecord(@RequestParam(name = "lastName", required = true) String lastName,
                                        @RequestParam(name = "firstName", required = true) String firstName) {
 
         log.info("URL : http://localhost:8080/medicalRecord?lastName="+lastName+"&firstName"+firstName);
-        //return ResponseEntity.status(HttpStatus.OK).body("LLe carnet de santé de " + lastName + " " + firstName + " a bien été supprimée. " );
-        return medicalRecordService.deleteMedicalRecord(lastName, firstName);
+        //return ResponseEntity.status(HttpStatus.OK).body("Le carnet de santé de " + lastName + " " + firstName + " a bien été supprimée. " );
+        medicalRecordService.deleteMedicalRecord(lastName, firstName);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-/*    @GetMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
-    public MedicalRecordEntity findByLastNameAndFirstName
-            (@RequestParam(name = "lastName", required = true) String lastName,
-             @RequestParam(name = "firstName", required = true) String firstName) {
-
-        log.info("URL : http://localhost:8080/medicalRecord?lastName="+lastName+"&firstName"+firstName);
-  *//*      return ResponseEntity.status(HttpStatus.OK).body(medicalRecordService
-                .findByLastNameAndFirstName(lastName,firstName));*//*
-        return medicalRecordService.findByLastNameAndFirstName(lastName, firstName);
-    }*/
 
 
 }

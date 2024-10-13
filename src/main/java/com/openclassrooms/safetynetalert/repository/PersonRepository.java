@@ -2,7 +2,10 @@ package com.openclassrooms.safetynetalert.repository;
 
 import com.openclassrooms.safetynetalert.entity.PersonEntity;
 import com.openclassrooms.safetynetalert.model.ChildModel;
+import com.openclassrooms.safetynetalert.services.impl.FireStationImpl;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,8 +15,9 @@ import java.util.List;
 public class PersonRepository {
 
     private List<PersonEntity> listPerson = new ArrayList<>();
+    private static final Logger log = LoggerFactory.getLogger(PersonRepository.class);
 
-    public PersonRepository( SerializationDriver serializationDriver) {
+    public PersonRepository(SerializationDriver serializationDriver) {
         this.serializationDriver = serializationDriver;
         this.listPerson = getPersonList();
     }
@@ -33,7 +37,7 @@ public class PersonRepository {
     public PersonEntity updatePerson(PersonEntity personUpdate) {
         listPerson = getPersonList();
         PersonEntity personUpdated = new PersonEntity();
-        for(PersonEntity personEntity : listPerson) {
+        for (PersonEntity personEntity : listPerson) {
             if (personEntity.getLastName().equalsIgnoreCase(personUpdate.getLastName()) &&
                     personEntity.getFirstName().equalsIgnoreCase(personUpdate.getFirstName())) {
                 personEntity.setAddress(personUpdate.getAddress());
@@ -41,12 +45,12 @@ public class PersonRepository {
                 personEntity.setZip(personUpdate.getZip());
                 personEntity.setPhone(personUpdate.getPhone());
                 personEntity.setEmail(personUpdate.getEmail());
-            }
                 return personUpdate;
+            }
         }
         return personUpdated;
     }
-    
+
     public Boolean deletePerson(String lastName, String firstName) {
         listPerson = getPersonList();
         for (PersonEntity person : listPerson) {
@@ -63,7 +67,7 @@ public class PersonRepository {
             if (person.getLastName().equals(lastName) &&
                     person.getFirstName().equals(firstName))
                 return person;
-            }
+        }
         return null;     //optional.empty
     }
 
@@ -78,31 +82,27 @@ public class PersonRepository {
         return null;     //optional.empty
     }
 
-    
+
     public List<PersonEntity> findByAddress(String address) {
         List<PersonEntity> personEntity = new ArrayList<>();
+        log.info("Adresse : {} ", address);
         listPerson = getPersonList();
         for (PersonEntity person : listPerson) {
-            if (person.getAddress().equals(address))
+            log.info("Person : {}", person);
+            if (person.getAddress().equals(address)) {
                 personEntity.add(person);
             }
-            return personEntity;
         }
-
-
-
+        log.info("PersonEntity : {}", personEntity);
+        return personEntity;
+    }
 
 
 }
-/*    public Person findAll(String firstName, String lastName, String address, String city,
-                          String zip, String phone, String email) {
-        for(Person person : listPerson) {
-           if(person.getLastName().equals(lastName)) 
-               return person;
-           }
-           return new Person();
-           // à voir recherche avec d'autre param précis cf attendu
-        }*/
+
+
+
+
 
 
 

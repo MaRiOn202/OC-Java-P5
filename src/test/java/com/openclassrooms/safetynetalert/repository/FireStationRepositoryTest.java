@@ -2,6 +2,7 @@ package com.openclassrooms.safetynetalert.repository;
 
 
 import com.openclassrooms.safetynetalert.entity.FireStationEntity;
+import com.openclassrooms.safetynetalert.exception.FileNotReadException;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ public class FireStationRepositoryTest {
     Logger log = LoggerFactory.getLogger(PersonRepository.class);
 
     @BeforeEach
-    void init() throws IOException {
+    void init() throws FileNotReadException {
         SerializationDriver serializationDriver = new SerializationDriver();
         fireStationRepository = new FireStationRepository(serializationDriver);
     }

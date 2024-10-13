@@ -55,7 +55,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonModel addPerson(PersonModel personM) {
         PersonEntity personEntity = new PersonEntity();
-         personEntity = personMapper.mapToPersonEntity(personM);
+        personEntity = personMapper.mapToPersonEntity(personM);
 
         PersonEntity pe = personRepository.addPerson(personEntity);
 
@@ -67,14 +67,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonModel updatePerson(PersonModel personModel) {
-        PersonEntity personUpdate =
-                personRepository.findByLastNameAndFirstName(
-                        personModel.getLastName(), personModel.getFirstName());
-/*        personUpdate.setAddress(personModel.getAddress());
-        personUpdate.setCity(personModel.getCity());
-        personUpdate.setPhone(personModel.getPhone());
-        personUpdate.setEmail(personModel.getEmail());
-        personUpdate.setZip(personModel.getZip());*/               // Model en entity
+        PersonEntity personUpdate = personRepository.findByLastNameAndFirstName(personModel.getLastName(), personModel.getFirstName());
         personUpdate = personMapper.mapToPersonEntity(personModel);
         //sauvegarder
         personUpdate = personRepository.updatePerson(personUpdate);
@@ -87,7 +80,6 @@ public class PersonServiceImpl implements PersonService {
     public Boolean deletePerson(String lastName, String firstName) {
          final boolean personDeleted = personRepository.deletePerson(lastName, firstName);
          if(personDeleted) {
-             //slf4j log à utiliser // log.info
              log.info("La personne " + lastName + " " + firstName + " a bien été supprimée");
          } else {
              log.info("La personne " + lastName + " " + firstName + " n'a pas été supprimée");
@@ -95,66 +87,68 @@ public class PersonServiceImpl implements PersonService {
         return personDeleted;
     }
 
-    
-    
-    // URL n°2 : http://localhost:8080/childAlert?address=<address>
 
+    /**
+     *   Renvoie une liste d'enfants habitant à une adresse.
+     *   Nom + prénom + âge ainsi que la liste des autres membres du foyer.
+     *
+     */
+    // URL n°2 : http://localhost:8080/childAlert?address=<address>
     @Override
     public List<ChildModel> getChildAlert(String address) {
 
         List<PersonEntity> listPerson = personRepository.findByAddress(address);
-        List<MedicalRecordEntity> listMedicalRecord = medicalRecordRepository.getMedicalRecordList();
 
-        // récupère une liste de MedicalRecord à partir des données de la classe MR
-        // Celle-ci permet de distinguer enfants/adultes
-        for (PersonEntity personEntity : listPerson)   {
-            MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
-                    .findByLastNameAndFirstName(personEntity.getLastName(), personEntity.getFirstName());
-            listMedicalRecord.add(medicalRecordEntity);
+        // Si personne trouvé renvoie liste vide
+        if (listPerson.isEmpty()) {
+            return Collections.emptyList();
         }
-
-        // Récupère seulement la liste des enfants
-        List<MedicalRecordEntity> medicalRecordChild = listMedicalRecord
-                .stream()
-                .filter(medicalRecord -> age.getMinor(medicalRecord.getBirthdate()))
-                .toList();     //liste des mineurs
 
         // Construit un nouvel objet : ChildModel
         List<ChildModel> listChildModel = new ArrayList<>();
 
-        // Celui-ci possède plusieurs paramètres donnés décrit dans ChildModel
-        for (MedicalRecordEntity medicalRecordEntity : medicalRecordChild) {
-            ChildModel childModel = new ChildModel();
-            childModel.setLastName(medicalRecordEntity.getLastName());
-            childModel.setFirstName(medicalRecordEntity.getFirstName());
-            childModel.setAge(age.getAge(medicalRecordEntity.getBirthdate()));
+        for (PersonEntity personEntity : listPerson)   {
 
-            // On souhaite également retourner la liste des membres de la famille
-            // dont les attributs sont présents dans PersonModel
-            List<PersonModel> listPersonFamily = listPerson
-                    .stream()
-                    .filter(person -> person.getLastName().equals(childModel.getLastName()))
-                    //.map(personEntity -> personMapper.mapToPersonModel(personEntity))
-                    .map(personEntity -> new PersonModel(
-                            personEntity.getFirstName(),
-                            personEntity.getLastName(),
-                            personEntity.getPhone(),
-                            personEntity.getAddress(),
-                            personEntity.getCity(),
-                            personEntity.getZip(),
-                            personEntity.getEmail()))     //changement de type personEntity en PersonModel
-                    .toList();
+            MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
+                    .findByLastNameAndFirstName(personEntity.getLastName(), personEntity.getFirstName());
 
-            childModel.setMembersFamily(listPersonFamily);                       //1 childmodel 
-            listChildModel.add(childModel);
+            // enfant mineur ?
+            if (age.getMinor(medicalRecordEntity.getBirthdate())) {
+                ChildModel childModel = new ChildModel();
+                childModel.setLastName(medicalRecordEntity.getLastName());
+                childModel.setFirstName(medicalRecordEntity.getFirstName());
+                childModel.setAge(age.getAge(medicalRecordEntity.getBirthdate()));
+
+                // listPersonFamily
+                List<PersonModel> listPersonFamily = listPerson
+                        .stream()
+                        .filter(person -> person.getLastName().equals(childModel.getLastName())
+                                && person.getAddress().equals(address))   // habitant à la même adresse
+                        .map(personMapper::mapToPersonModel)
+
+                        //.map(personE -> personMapper.mapToPersonModel(personE))
+                        .toList();
+
+                childModel.setMembersFamily(listPersonFamily);        // intégré dans l'objet CM
+                listChildModel.add(childModel);
+            }
 
         }
-        return listChildModel;          // renvoie uniquement liste des enfants plus autres membres
-           // renvoie une liste vide s'il n'y a pas d'enfants ?
+
+        // Pb de la liste vide
+        if (listChildModel.isEmpty()) {
+            return Collections.emptyList();
+        }
+        
+        return listChildModel;  // correspond à l'objet ChildModel
     }
 
 
-
+    /**
+     *   Renvoie la liste de tous les foyers desservis par une caserne.
+     *   Regroupe les personnes par adresse.
+     *
+     */
     // URL n°5 :   http://localhost:8080/flood/stations?stations=<a list of station_numbers>
    @Override
    public FloodModel getFlood(List<String> stationNumber) {
@@ -178,8 +172,7 @@ public class PersonServiceImpl implements PersonService {
        // Etape 2 chaque adresse récupère liste de personnes / regroupe par famille par le LastName
        // Etape 3 créer famille correspondante et les ajouter dans une liste
        FloodModel floodModel = new FloodModel();
-
-       // très obscur
+        
        Map<String, List<PersonEntity>> listPersonEntity = addressListStation
                .stream()
                .map(address ->  {
@@ -208,15 +201,6 @@ public class PersonServiceImpl implements PersonService {
                    
                    return personMapper.mapToPersonInfoModel
                            (resultAge,personEntity, medicalRecordEntity);
-  /*                 return new PersonInfoModel(
-                           personEntity.getFirstName(),
-                           personEntity.getLastName(),
-                           personEntity.getAddress(),
-                           resultAge,
-                           personEntity.getEmail(),
-                           medications,
-                           allergies);*/
-
                }).collect(toList());
             listFamille.put(address, listPersonInfoModelByAddress);
            }
@@ -224,9 +208,13 @@ public class PersonServiceImpl implements PersonService {
            floodModel.setListFamille(listFamille);
        return floodModel;
    }
-   
 
 
+    /**
+     *   Retourne le nom, l'adresse, l'âge, l'email et les antécédents médicaux de chaque habitant.
+     *   Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
+     *
+     */
     // URL n° 6 : http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
     @Override
     public List<PersonInfoModel> getPersonInfo(String lastName, String firstName) {
@@ -264,39 +252,21 @@ public class PersonServiceImpl implements PersonService {
 
             MedicalRecordEntity result = medicalRecordRepository
                     .findByLastName(personModel.getLastName());
+
             long resultAge = age.getAge(result.getBirthdate());
+            
             listPersonInfoModel.add(personMapper.mapToPersonInfoModel
                     (personModel, resultAge, result));
-            
-/*            PersonInfoModel personInfoModel = new PersonInfoModel();
-            personInfoModel.setLastName(personModel.getLastName());
-            personInfoModel.setFirstName(personModel.getFirstName());
-            personInfoModel.setAddress(personModel.getAddress());
-            personInfoModel.setEmail(personModel.getEmail());
-            personInfoModel.setAge(age.getAge(result.getBirthdate()));
-            personInfoModel.setMedications(result.getMedications());
-            personInfoModel.setAllergies(result.getAllergies());
-            listPersonInfoModel.add(personInfoModel);*/
         }
         return listPersonInfoModel;
 
     }
 
-    //    cf. l. 287
-/*    @Override
-    public PersonEntity getPersonEntityWithMedicalRecord(MedicalRecordEntity medicalRecordEntity,
-                                                         @NotNull List<PersonEntity> listPersonEntity) {
-        //if isPresent return resultat sinon null
-        return listPersonEntity
-                .stream()
-                .filter(person -> person.getLastName().equals(medicalRecordEntity.getLastName()) &&
-                        person.getFirstName().equals(medicalRecordEntity.getFirstName()))
-                .findFirst()
-                .get();              //retourne le premier élément
 
-    }*/
-
-    
+    /**
+     *   Renvoie les adresses email de tous les habitants de la ville 
+     *
+     */
     // URL n° 7 :  http://localhost:8080/communityEmail?city=<city>
     @Override
     public List<String> getCommunityEmail(String city) {
@@ -308,12 +278,6 @@ public class PersonServiceImpl implements PersonService {
                 .stream()
                 .filter(personEntity -> personEntity.getCity().equalsIgnoreCase(city))
                 .forEach(personEntity -> emails.add(personEntity.getEmail()));
-
-/*        for (PersonEntity personEntity : listPerson) {
-            if (personEntity.getCity().equals(city)) {
-                emails.add(personEntity.getEmail());
-            }
-        }*/
         return emails;
     }
 
