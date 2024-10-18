@@ -1,7 +1,6 @@
 package com.openclassrooms.safetynetalert.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openclassrooms.safetynetalert.model.FireStationModel;
 import com.openclassrooms.safetynetalert.model.MedicalRecordModel;
 import com.openclassrooms.safetynetalert.services.MedicalRecordService;
 import org.junit.jupiter.api.BeforeEach;

@@ -26,21 +26,12 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     @Override
     public MedicalRecordModel addMedicalRecord(MedicalRecordModel medicalRecordM) {
-        MedicalRecordEntity medicalRecordEntity  = new MedicalRecordEntity();
-        medicalRecordEntity = medicalMapper.mapToMedicalRecordEntity(medicalRecordM);
-/*        medicalRecordEntity.setLastName(medicalRecordM.getLastName());
-        medicalRecordEntity.setFirstName(medicalRecordM.getFirstName());
-        medicalRecordEntity.setBirthdate(medicalRecordM.getBirthdate());
-        medicalRecordEntity.setMedications(medicalRecordM.getMedications());
-        medicalRecordEntity.setAllergies(medicalRecordM.getAllergies());*/    // Model en Entity
+        MedicalRecordEntity medicalRecordEntity = medicalMapper.mapToMedicalRecordEntity(medicalRecordM);
 
         MedicalRecordEntity mre = medicalRecordRepository.addMedicalRecord(medicalRecordEntity);
+
         MedicalRecordModel medicalRecordModel = medicalMapper.mapToMedicalRecordModel(mre);
-/*        medicalRecordModel.setLastName(mre.getLastName());
-        medicalRecordModel.setFirstName(mre.getFirstName());
-        medicalRecordModel.setBirthdate(mre.getBirthdate());
-        medicalRecordModel.setMedications(mre.getMedications());
-        medicalRecordModel.setAllergies(mre.getAllergies());*/
+
         log.info("Le carnet de santé a bien été créé !" );
         return medicalRecordModel;
     }
@@ -69,7 +60,6 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         final boolean medicalRecordDeleted =
                 medicalRecordRepository.deleteMedicalRecord(lastName, firstName);
         if(medicalRecordDeleted) {
-            //slf4j log à utiliser // log.info
             log.info("Le carnet de santé de " + lastName + " " + firstName + " a bien été supprimé");
         } else {
             log.info("Le carnet de santé de " + lastName + " " + firstName + " n'a pas été supprimé");

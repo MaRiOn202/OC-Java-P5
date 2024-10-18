@@ -1,7 +1,6 @@
 package com.openclassrooms.safetynetalert.services;
 
 
-import com.openclassrooms.safetynetalert.controller.PersonController;
 import com.openclassrooms.safetynetalert.entity.FireStationEntity;
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
 import com.openclassrooms.safetynetalert.entity.PersonEntity;
@@ -32,7 +31,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-//@SpringBootTest
+
 @ExtendWith(MockitoExtension.class)
 public class PersonServiceTest {
 

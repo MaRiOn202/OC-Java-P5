@@ -19,8 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.print.DocFlavor;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +49,7 @@ public class FireStationServiceTest {
     @Mock
     AgeUtils age;
 
-    
-     // il faut l'initialiser important
-   //private static final List<FireStationModel> listFireStation = new ArrayList<>();private List<PersonEntity> listPerson  = new ArrayList<>();
+
     private List<FireStationEntity> listFireStation  = new ArrayList<>();
     private List<MedicalRecordEntity> listMedicalRecord = new ArrayList<>();
     private List<PersonEntity> listPerson= new ArrayList<>();
@@ -74,9 +70,6 @@ public class FireStationServiceTest {
     public void init() {
 
       // Création de deux PersonEntity
-        //PersonEntity person1 = new PersonEntity();
-        //PersonEntity person2 = new PersonEntity();
-
         person1.setLastName("lastName1");
         person1.setFirstName("firstName1");
         person1.setAddress("Rue de Paris");
@@ -99,9 +92,6 @@ public class FireStationServiceTest {
 
 
       // Création de deux FireStation
-      //FireStationEntity fireStation1 = new FireStationEntity();
-      //FireStationEntity fireStation2 = new FireStationEntity();
-
       fireStation1.setStation("1");
       fireStation1.setAddress("Paris");
       listFireStation.add(fireStation1);
@@ -135,8 +125,6 @@ public class FireStationServiceTest {
        fireMembersModel2.setFirstname("firstName2");
 
        // Personnes couvertes
-       //PersonCovertModel personCovertModel1 = new PersonCovertModel();
-       //List<PersonCovertModel> listPersonCovert = new ArrayList<>();
        personCovertModel1.setLastName("lastName1");
        personCovertModel1.setFirstName("firstName1");
        personCovertModel1.setAddress("Rue de Paris");
@@ -234,7 +222,6 @@ public class FireStationServiceTest {
 
         PersonFireStationModel pfsm = fireStationImpl.getPersonCovertByFireStation(stationNumber);
 
-        //assertEquals("lastName1", pfsm.getMembers().get(0).getLastName());
         assertEquals(2, pfsm.getMembers().size());
         assertEquals(1, pfsm.getNbreAdult());      
         assertEquals(1, pfsm.getNbreEnfant());
@@ -256,8 +243,8 @@ public class FireStationServiceTest {
 
     @Test
     void testGetFireMembersAddress() {
-     // Je veux récupérer l'adresse des personnes d'un même foyer
-        // Créatino d'un jeu de données fictif
+
+       // Création d'un jeu de données fictif
      String address = "Address1";
 
      List<PersonEntity> listPerson = new ArrayList<>();
@@ -280,7 +267,7 @@ public class FireStationServiceTest {
      fireStation1.setStation("1");
      fireStation1.setAddress(address);
 
-     // Création de MedicalRecordEntity des 2 Person créées
+     // Création de MedicalRecordEntity des 2 Personnes créées
      MedicalRecordEntity medicalRecordEntity1 = new MedicalRecordEntity();
      MedicalRecordEntity medicalRecordEntity2 = new MedicalRecordEntity();
      medicalRecordEntity1.setLastName("lastName1");
@@ -327,7 +314,5 @@ public class FireStationServiceTest {
      verify(medicalRecordRepository, times(1)).findByLastNameAndFirstName("lastName1", "firstName1");
      verify(fireStationMapper, times(1)).mapToFireMembersModel(resultAge,person1, medicalRecordEntity1);
     }
-
-
 
 }

@@ -1,8 +1,6 @@
 package com.openclassrooms.safetynetalert.repository;
 
 import com.openclassrooms.safetynetalert.entity.PersonEntity;
-import com.openclassrooms.safetynetalert.model.ChildModel;
-import com.openclassrooms.safetynetalert.services.impl.FireStationImpl;
 import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,7 @@ public class PersonRepository {
         return personEntity;
     }
 
-    // Laisser comme cela
+
     public PersonEntity updatePerson(PersonEntity personUpdate) {
         listPerson = getPersonList();
         PersonEntity personUpdated = new PersonEntity();
@@ -56,7 +54,7 @@ public class PersonRepository {
         for (PersonEntity person : listPerson) {
             if (person.getLastName().equals(lastName) &&
                     person.getFirstName().equals(firstName))
-                return listPerson.remove(person);    //true
+                return listPerson.remove(person);
         }
         return false;
     }
@@ -67,17 +65,6 @@ public class PersonRepository {
             if (person.getLastName().equals(lastName) &&
                     person.getFirstName().equals(firstName))
                 return person;
-        }
-        return null;     //optional.empty
-    }
-
-    public List<PersonEntity> findByLastNameAndFirstNameList(String lastName, String firstName) {
-        List<PersonEntity> personEntity = new ArrayList<>();
-        listPerson = getPersonList();
-        for (PersonEntity person : listPerson) {
-            if (person.getLastName().equals(lastName) &&
-                    person.getFirstName().equals(firstName))
-                return personEntity;
         }
         return null;     //optional.empty
     }

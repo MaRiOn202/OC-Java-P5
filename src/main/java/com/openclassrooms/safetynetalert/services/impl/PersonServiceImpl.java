@@ -54,14 +54,13 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonModel addPerson(PersonModel personM) {
-        PersonEntity personEntity = new PersonEntity();
-        personEntity = personMapper.mapToPersonEntity(personM);
+        PersonEntity personEntity = personMapper.mapToPersonEntity(personM);
 
         PersonEntity pe = personRepository.addPerson(personEntity);
 
-        PersonModel personModel = personMapper.mapToPersonModel(pe);    //  entity en model
+        PersonModel personModel = personMapper.mapToPersonModel(pe);
 
-        log.info("La personne a bien été créée !" );                                                          //Ok
+        log.info("La personne a bien été créée !" );
         return personModel;
     }
 
@@ -129,7 +128,7 @@ public class PersonServiceImpl implements PersonService {
                         //.map(personE -> personMapper.mapToPersonModel(personE))
                         .toList();
 
-                childModel.setMembersFamily(listPersonFamily);        // intégré dans l'objet CM
+                childModel.setMembersFamily(listPersonFamily);        
                 listChildModel.add(childModel);
             }
 
@@ -158,19 +157,18 @@ public class PersonServiceImpl implements PersonService {
                .stream()
                .map(station -> fireStationRepository.findByStation(station))
                .flatMap(fireStationEntities -> fireStationEntities.stream()).toList();
-       
-        //List<MedicalRecordEntity> listMedicalRecordEntity = medicalRecordService.getMedicalRecordList();
+
         List<String> addressListStation = new ArrayList<>();
 
-        // Etape 1 : Récupérer la liste des adresses des FS
+        // Récupérer la liste des adresses des FS
         for (FireStationEntity fireStationEntity : listFireStationModel) {
             if (stationNumber.contains(fireStationEntity.getStation()))  {
                 addressListStation.add(fireStationEntity.getAddress());
             }
         }
         
-       // Etape 2 chaque adresse récupère liste de personnes / regroupe par famille par le LastName
-       // Etape 3 créer famille correspondante et les ajouter dans une liste
+       // Chaque adresse récupère liste de personnes / regroupe par famille par address
+       // Créer famille correspondante et les ajouter dans une liste
        FloodModel floodModel = new FloodModel();
         
        Map<String, List<PersonEntity>> listPersonEntity = addressListStation
@@ -181,7 +179,8 @@ public class PersonServiceImpl implements PersonService {
                    .filter(personModel
                           -> personModel.getAddress().equals(address)).collect(toList());
            return listPersonByAddress;
-       }).flatMap(Collection::stream)     //récupère le contenu de toutes lists/collections en une seule nouvelle
+       })
+               .flatMap(Collection::stream)     //récupère le contenu de toutes lists/collections en une seule nouvelle
                .collect(groupingBy(personEntity -> personEntity.getAddress()));
 
        Map<String, List<PersonInfoModel>> listFamille = new HashMap<>();
@@ -190,7 +189,7 @@ public class PersonServiceImpl implements PersonService {
                List<PersonEntity> listPersonByAddress = listPersonEntity.get(address);
                List<PersonInfoModel> listPersonInfoModelByAddress = listPersonByAddress.stream().map(personEntity -> {
 
-                   //ex ici On récupère le LastName et le FirstName de MRE
+                   // On récupère le LastName et le FirstName de MRE
                    MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
                            .findByLastNameAndFirstName(personEntity
                                    .getLastName(), personEntity
@@ -237,7 +236,7 @@ public class PersonServiceImpl implements PersonService {
                 personModel.getLastName().equals(lastName))) {
             return null;
         }
-        // au moins une personne portant le nom et le prénom demandé
+        // Au moins une personne portant le nom et le prénom demandé
         if(!personWithSameName.stream().anyMatch(personModel ->
                 (personModel.getLastName().equals(lastName)
                 && personModel.getFirstName().equals(firstName)))) {
@@ -247,7 +246,7 @@ public class PersonServiceImpl implements PersonService {
         // On souhaite récupérer les paramètres de MREntity
         List<PersonInfoModel> listPersonInfoModel = new ArrayList<>();
 
-        // récupère une liste de à partir des données de la classe MR
+        // Récupère une liste de à partir des données de la classe MR
         for (PersonModel personModel : personWithSameName)   {
 
             MedicalRecordEntity result = medicalRecordRepository

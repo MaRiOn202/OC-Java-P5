@@ -36,7 +36,7 @@ public class AgeUtils {
         return age;
     }
 
-    //  calcule si une personne est mineure ou pas sous forme de booléen
+    // Calcule si une personne est mineure ou pas sous forme de booléen
     public boolean getMinor(String birthdate)  {
 
         if(getAge(birthdate) <= 18 ) {

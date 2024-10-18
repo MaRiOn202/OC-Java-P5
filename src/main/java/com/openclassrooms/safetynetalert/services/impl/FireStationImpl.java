@@ -25,7 +25,6 @@ import java.util.List;
 public class FireStationImpl implements FireStationService {
 
 
-
     @Autowired
     private FireStationRepository fireStationRepository;
 
@@ -51,7 +50,7 @@ public class FireStationImpl implements FireStationService {
 
         FireStationEntity fireStationEntity = new FireStationEntity();
         fireStationEntity.setAddress(fireStationM.getAddress());
-        fireStationEntity.setStation(fireStationM.getStation());      //model en entity
+        fireStationEntity.setStation(fireStationM.getStation());
 
         FireStationEntity fse = fireStationRepository.addFireStation(fireStationEntity);
         FireStationModel fireStationModel = new FireStationModel();
@@ -67,8 +66,7 @@ public class FireStationImpl implements FireStationService {
                 fireStationRepository.findByAddress(fireStationModel.getAddress());
         fireStationUpdate.setStation(fireStationModel.getStation());
         fireStationUpdate = fireStationRepository.updateFireStation(fireStationUpdate);
-        
-        // fireStationEntity en FSModel
+
         FireStationModel stationUpdated =  new FireStationModel();
         stationUpdated.setAddress(fireStationUpdate.getAddress());
         stationUpdated.setStation(fireStationUpdate.getStation());
@@ -96,7 +94,7 @@ public class FireStationImpl implements FireStationService {
      *   correspondante
      *   
      * @param stationNumber
-     * @return
+     * @return PersonFireStationModel
      */
     //URL n°1 :  http://localhost:8080/firestation?stationNumber=<station_number>
     @Override
@@ -105,7 +103,7 @@ public class FireStationImpl implements FireStationService {
         long numberOfAdult;
         long numberOfChildren;
 
-        List<FireStationEntity> listFireStation = fireStationRepository.findByStation(stationNumber);     //plusieurs address
+        List<FireStationEntity> listFireStation = fireStationRepository.findByStation(stationNumber);
         List<MedicalRecordEntity> listMedicalRecord = new ArrayList<>();
         List<PersonEntity> personsCovert =  new ArrayList<>();
 
@@ -123,7 +121,7 @@ public class FireStationImpl implements FireStationService {
             listMedicalRecord.add(medicalRecordEntity);                      //recupere un objet
         }
 
-        // permet de déterminer l'âge des individus et distinguer enfants/adultes + nbre
+        // Permet de déterminer l'âge des individus et distinguer enfants/adultes + nbre
         numberOfChildren =  listMedicalRecord
                 .stream()
                 .filter(medicalRecord -> age.getMinor(medicalRecord.getBirthdate()))
@@ -133,18 +131,12 @@ public class FireStationImpl implements FireStationService {
                 .stream()
                 .filter(medicalRecord -> !age.getMinor(medicalRecord.getBirthdate()))      //filtre sur false
                 .count();
-        
-        //retourner l'objet PersonFireStation
-        // retourne le résultat à savoir listHabitant + nbre enfants et nbre adultes
+
+
         PersonFireStationModel pfsm = new PersonFireStationModel();
         List<PersonCovertModel> listHabitants = personsCovert
                 .stream()
                 .map(personEntity -> personMapper.mapToPersonCovertModel(personEntity))
-/*                .map(personEntity -> new PersonCovertModel(
-                        personEntity.getFirstName(),
-                        personEntity.getLastName(),
-                        personEntity.getPhone(),
-                        personEntity.getAddress()))*/
                 .toList();
         pfsm.setMembers(listHabitants);
         pfsm.setNbreAdult(numberOfAdult);
@@ -204,17 +196,6 @@ public class FireStationImpl implements FireStationService {
 
         List<FireMembersModel> listFireMembersModel = new ArrayList<>();
         for (PersonEntity personEntity : listPerson) {
-/*            FireMembersModel fireMembersModel = new FireMembersModel();
-            fireMembersModel.setFirstname(personEntity.getFirstName());
-            fireMembersModel.setLastname(personEntity.getLastName());
-            fireMembersModel.setPhone(personEntity.getPhone());
-            MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
-                    .findByLastNameAndFirstName
-                    (personEntity.getLastName(), personEntity.getFirstName());
-            fireMembersModel.setAge(age.getAge(medicalRecordEntity.getBirthdate()));
-            fireMembersModel.setMedications(medicalRecordEntity.getMedications());
-            fireMembersModel.setAllergies(medicalRecordEntity.getAllergies());
-            listFireMembersModel.add(fireMembersModel);*/
             
             MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
                     .findByLastNameAndFirstName

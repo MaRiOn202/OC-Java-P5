@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalert.controller;
 
-import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
+
 import com.openclassrooms.safetynetalert.model.MedicalRecordModel;
 import com.openclassrooms.safetynetalert.services.MedicalRecordService;
 import lombok.AllArgsConstructor;
@@ -26,9 +26,6 @@ public class MedicalRecordController {
     @PostMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<MedicalRecordModel> addMedicalRecord(@NotNull @RequestBody MedicalRecordModel medicalRecordModel) {
         log.info("URL : http://localhost:8080/medicalRecord?medicalRecordModel="+medicalRecordModel);
-    /*    return ResponseEntity.status(HttpStatus.OK).body("Le carnet de santé de "+ medicalRecord.getLastName()
-                + " "
-                + medicalRecord.getFirstName() + " a bien été créé. " );*/
         medicalRecordService.addMedicalRecord(medicalRecordModel);
         return new ResponseEntity<>(medicalRecordModel, HttpStatus.CREATED);
     }
@@ -43,11 +40,9 @@ public class MedicalRecordController {
     }
     
     @DeleteMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<Boolean> deleteMedicalRecord(@RequestParam(name = "lastName", required = true) String lastName,
-                                       @RequestParam(name = "firstName", required = true) String firstName) {
-
+    public ResponseEntity<Boolean> deleteMedicalRecord(@RequestParam(name = "lastName") String lastName,
+                                       @RequestParam(name = "firstName") String firstName) {
         log.info("URL : http://localhost:8080/medicalRecord?lastName="+lastName+"&firstName"+firstName);
-        //return ResponseEntity.status(HttpStatus.OK).body("Le carnet de santé de " + lastName + " " + firstName + " a bien été supprimée. " );
         medicalRecordService.deleteMedicalRecord(lastName, firstName);
         return new ResponseEntity<>(HttpStatus.OK);
     }

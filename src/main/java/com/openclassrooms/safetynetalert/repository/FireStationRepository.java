@@ -26,7 +26,7 @@ public class FireStationRepository {
 
     /**
      *   Récupère l'ensemble des données des fireStations du fichier json
-     *   @ return une liste des fireStations du json
+     *   @ return une liste des fireStations
      */
     public List<FireStationEntity> getFireStationList() {
         return serializationDriver.safetyAlert.getFireStations();
@@ -38,7 +38,6 @@ public class FireStationRepository {
     }
 
 
-    // A LAISSER
     public FireStationEntity updateFireStation(FireStationEntity fireStationUpdate) {
         listFireStation = getFireStationList();
         FireStationEntity fireStationUpdated = new FireStationEntity();
@@ -81,19 +80,6 @@ public class FireStationRepository {
         }
         return null;
     }
-
-
-    // à gérer dans le service exception "pas de station trouvée
-    //rajouter par station  aussi car rapporte plusieurs firestation
-
-/*    public FireStation findAll(String station, String address) {
-        for(FireStation fireStation : listFireStation) {
-            if(fireStation.getStation().equals(station)
-            && fireStation.getAddress().equals(address))
-                return fireStation;
-        }
-        return new FireStation();
-    }*/
 
 
 }

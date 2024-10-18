@@ -30,7 +30,7 @@ public class MedicalRecordRepository {
         return medicalRecordEntity;
     }
 
-    // Laisser comme ça 
+
     public MedicalRecordEntity updateMedicalRecord(MedicalRecordEntity medicalUpdate) {
         listMedicalRecord = getMedicalRecordList();
         MedicalRecordEntity medicalUpdated = new MedicalRecordEntity();
@@ -53,7 +53,7 @@ public class MedicalRecordRepository {
                    medicalRecord.getFirstName().equals(firstName))
                return medicalRecord;
        }
-       return null;              // cours optional.empty https://medium.com/@JeremieGottero/optional-en-java-quand-lutiliser-et-quand-ne-pas-l-utiliser-9bc759e162cd
+       return null;
     }
 
     public Boolean deleteMedicalRecord(String lastName, String firstName) {

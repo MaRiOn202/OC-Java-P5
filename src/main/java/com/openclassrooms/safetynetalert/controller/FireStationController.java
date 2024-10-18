@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalert.controller;
 
-import com.openclassrooms.safetynetalert.entity.FireStationEntity;
+
 import com.openclassrooms.safetynetalert.model.FireModel;
 import com.openclassrooms.safetynetalert.model.FireStationModel;
 import com.openclassrooms.safetynetalert.model.PersonFireStationModel;
@@ -26,9 +26,6 @@ public class FireStationController {
     @Autowired
     private final FireStationService fireStationService;
 
-    @Autowired
-    private final PersonService personService;
-
     private static final Logger log = LoggerFactory.getLogger(FireStationController.class);
 
 
@@ -37,10 +34,7 @@ public class FireStationController {
         log.info("URL : http://localhost:8080/firestation?fireStationModel="+fireStationModel);
         fireStationService.addFireStation(fireStationModel);
        return new ResponseEntity<>(fireStationModel, HttpStatus.CREATED);
-               //ResponseEntity.status(HttpStatus.OK)
-               // .body("La station n°"+ fireStationModel.getStation()
-                //+ " située au "
-                //+ fireStationModel.getAddress() + " a bien été créée. " );
+
     }
 
      @PutMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
@@ -54,11 +48,8 @@ public class FireStationController {
 
     @DeleteMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<Boolean> deleteFireStation(
-            @RequestParam(name = "address", required = true) String address) {
-
+            @RequestParam(name = "address") String address) {
         log.info("URL : http://localhost:8080/firestation?address="+address);
-
-       // return ResponseEntity.status(HttpStatus.OK).body("La caserne se situant au " + address + " a bien été supprimée. " );
         fireStationService.deleteFireStation(address);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -66,24 +57,22 @@ public class FireStationController {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+     // URL n°1
      @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
      public PersonFireStationModel getPersonCovertByFireStation(@RequestParam(name = "stationNumber")
                                                                   String stationNumber) {
          return fireStationService.getPersonCovertByFireStation(stationNumber);
      }
-
+     // URL n°3
     @GetMapping(value = "/phoneAlert", produces = MediaType.APPLICATION_JSON_VALUE )
-    public List<String> getPhoneAlert(@NotNull @RequestParam (name = "stationNumber",
-            required = true) String stationNumber) {
+    public List<String> getPhoneAlert(@NotNull @RequestParam (name = "stationNumber") String stationNumber) {
         log.info("URL : http://localhost:8080/phoneAlert?stationNumber="+stationNumber);
         return fireStationService.getPhoneAlert(stationNumber);
     }
 
     //  URL n°4
     @GetMapping(value = "/fire", produces = MediaType.APPLICATION_JSON_VALUE )
-    public FireModel getFireMembersAddress(@NotNull @RequestParam (name = "address",
-            required = true) String address) {
-
+    public FireModel getFireMembersAddress(@NotNull @RequestParam (name = "address") String address) {
         log.info("URL : http://localhost:8080/fire?address="+address);
         return fireStationService.getFireMembersAddress(address);
     }

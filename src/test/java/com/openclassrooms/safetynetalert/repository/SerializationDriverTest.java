@@ -5,7 +5,6 @@ import com.openclassrooms.safetynetalert.utils.SerializationDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 
 
 public class SerializationDriverTest {

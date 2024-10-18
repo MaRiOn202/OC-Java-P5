@@ -1,6 +1,6 @@
 package com.openclassrooms.safetynetalert.controller;
 
-import com.openclassrooms.safetynetalert.entity.PersonEntity;
+
 import com.openclassrooms.safetynetalert.model.ChildModel;
 import com.openclassrooms.safetynetalert.model.FloodModel;
 import com.openclassrooms.safetynetalert.model.PersonInfoModel;
@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @AllArgsConstructor
@@ -34,10 +34,6 @@ public class PersonController {
         log.info("URL : http://localhost:8080/person?personModel="+personModel);
         personService.addPerson(personModel);
         return new ResponseEntity<>(personModel, HttpStatus.CREATED);
-/*        return ResponseEntity.status(HttpStatus.OK)
-                .body(person.getLastName() + " "
-                        + person.getFirstName() + " a bien été créée. ");*/
-        //return personModel;
     }
 
     @PutMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,8 +45,8 @@ public class PersonController {
     }
     
     @DeleteMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> deletePerson(@RequestParam(name = "lastName", required = true) String lastName,
-                               @RequestParam(name = "firstName", required = true) String firstName) {
+    public ResponseEntity<Boolean> deletePerson(@RequestParam(name = "lastName") String lastName,
+                               @RequestParam(name = "firstName") String firstName) {
         
         log.info("URL : http://localhost:8080/person?lastName="+lastName+"&firstName"+firstName);
          personService.deletePerson(lastName, firstName);
@@ -58,22 +54,19 @@ public class PersonController {
     }
 
 
-    
     /////////////////////////////////////////////////////////////////////////////////////////
+    
     // URL n°2
     @GetMapping(value = "/childAlert", produces = MediaType.APPLICATION_JSON_VALUE )
-    public List<ChildModel> getChildAlert(@RequestParam (name = "address", required = true)
+    public List<ChildModel> getChildAlert(@RequestParam (name = "address")
     String address) {
-
         log.info("URL : http://localhost:8080/childAlert?address="+address);
         return personService.getChildAlert(address);
     }
 
      // URL n°5 : 
      @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE )
-     public FloodModel getFlood(@NotNull @RequestParam (name = "stationNumber",
-             required = true) List<String> stationNumber) {
-
+     public FloodModel getFlood(@NotNull @RequestParam (name = "stationNumber") List<String> stationNumber) {
          log.info("URL : http://localhost:8080/flood/stations?stations="+stationNumber);
          return personService.getFlood(stationNumber);
      }
@@ -81,8 +74,8 @@ public class PersonController {
 
      // URL n°6
     @GetMapping(value = "/personInfo", produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<List<PersonInfoModel>> getPersonInfo(@NotNull @RequestParam (name = "lastName", required = true) String lastName,
-                                                               @RequestParam(name = "firstName", required = true) String firstName) {
+    public ResponseEntity<List<PersonInfoModel>> getPersonInfo(@NotNull @RequestParam (name = "lastName") String lastName,
+                                                               @RequestParam(name = "firstName") String firstName) {
 
         log.info("URL : http://localhost:8080/personInfo?lastName="+lastName+"&firstName="+firstName);
         return ResponseEntity.status(HttpStatus.OK).body(personService
@@ -91,7 +84,7 @@ public class PersonController {
 
     // URL n°7
     @GetMapping(value = "/communityEmail", produces = MediaType.APPLICATION_JSON_VALUE )
-    public List<String> getCommunityEmail(@NotNull @RequestParam(name = "city", required = true) String city) {
+    public List<String> getCommunityEmail(@NotNull @RequestParam(name = "city") String city) {
 
         log.info("URL : http://localhost:8080/communityEmail?city="+city);
         return personService.getCommunityEmail(city);

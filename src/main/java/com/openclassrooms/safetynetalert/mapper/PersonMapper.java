@@ -71,7 +71,7 @@ public class PersonMapper {
         return personEntity;
     }
 
-    // à revoir
+
     public PersonInfoModel mapToPersonInfoModel(PersonModel personModel,
                                                 long age, MedicalRecordEntity medicalRecordEntity) {
         PersonInfoModel personInfoModel = new PersonInfoModel();

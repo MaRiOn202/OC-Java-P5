@@ -12,8 +12,8 @@ import java.util.List;
 public class PersonFireStationModel {
 
     private List<PersonCovertModel> members;
-    private Long nbreAdult;       //+ 18 ans
-    private Long nbreEnfant;      //- 18 ans
+    private Long nbreAdult;
+    private Long nbreEnfant;     
 
 
 }

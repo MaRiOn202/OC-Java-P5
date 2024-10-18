@@ -20,12 +20,9 @@ public interface FireStationService {
     //URL n°3 :
     List<String> getPhoneAlert(String stationNumber);
 
-    //FireStationModel addFireStation(FireStationModel fireStationM);
-
     // URL n°4
     FireModel getFireMembersAddress(String address);
 
     Boolean deleteFireStation(String address);
-
-
+    
 }
