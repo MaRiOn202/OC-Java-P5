@@ -78,7 +78,7 @@ public class FireStationImpl implements FireStationService {
 
     @Override
     public Boolean deleteFireStation(String address) {
-            // à faire
+            
             final boolean fireStationDeleted = fireStationRepository.deleteFireStation(address);
             if(fireStationDeleted) {
                 log.info("La caserne de pompier " + address + " a bien été supprimée");

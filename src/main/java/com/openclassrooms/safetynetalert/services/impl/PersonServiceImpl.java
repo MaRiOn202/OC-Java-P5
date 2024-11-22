@@ -98,7 +98,7 @@ public class PersonServiceImpl implements PersonService {
 
         List<PersonEntity> listPerson = personRepository.findByAddress(address);
 
-        // Si personne trouvé renvoie liste vide
+        // Si personne n'est trouvé renvoie liste vide
         if (listPerson.isEmpty()) {
             return Collections.emptyList();
         }

@@ -39,15 +39,8 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     @Override
     public MedicalRecordModel updateMedicalRecord(MedicalRecordModel medicalRecordModel) {
 
-        MedicalRecordEntity medicalUpdate =
-                medicalRecordRepository.findByLastNameAndFirstName(medicalRecordModel.getLastName(), medicalRecordModel.getFirstName());
 
-/*        medicalUpdate.setLastName(medicalRecordModel.getLastName());
-        medicalUpdate.setFirstName(medicalRecordModel.getFirstName());
-        medicalUpdate.setBirthdate(medicalRecordModel.getBirthdate());
-        medicalUpdate.setMedications(medicalRecordModel.getMedications());
-        medicalUpdate.setAllergies(medicalRecordModel.getAllergies());*/
-        medicalUpdate = medicalMapper.mapToMedicalRecordEntity(medicalRecordModel);
+        MedicalRecordEntity medicalUpdate = medicalMapper.mapToMedicalRecordEntity(medicalRecordModel);
         medicalUpdate = medicalRecordRepository.updateMedicalRecord(medicalUpdate);
         MedicalRecordModel medicalReturn = medicalMapper.mapToMedicalRecordModel(medicalUpdate);
         log.info("Le carnet de santé a bien été modifié !" );
