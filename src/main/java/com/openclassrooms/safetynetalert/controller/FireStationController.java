@@ -1,6 +1,7 @@
 package com.openclassrooms.safetynetalert.controller;
 
 
+import com.openclassrooms.safetynetalert.exception.FireStationNotFoundException;
 import com.openclassrooms.safetynetalert.model.FireModel;
 import com.openclassrooms.safetynetalert.model.FireStationModel;
 import com.openclassrooms.safetynetalert.model.PersonFireStationModel;
@@ -39,7 +40,7 @@ public class FireStationController {
 
      @PutMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE )
      public ResponseEntity<FireStationModel> updateFireStation(@NotNull
-             @RequestBody FireStationModel fireStationModel) {
+             @RequestBody FireStationModel fireStationModel) throws FireStationNotFoundException {
      log.info("URL : http://localhost:8080/firestation?fireStationModel="+fireStationModel);
      fireStationService.updateFireStation(fireStationModel);
 

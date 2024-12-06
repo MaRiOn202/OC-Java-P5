@@ -1,6 +1,7 @@
 package com.openclassrooms.safetynetalert.services.impl;
 
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
+import com.openclassrooms.safetynetalert.exception.MedicalRecordNotFoundException;
 import com.openclassrooms.safetynetalert.mapper.MedicalRecordMapper;
 import com.openclassrooms.safetynetalert.model.MedicalRecordModel;
 import com.openclassrooms.safetynetalert.services.MedicalRecordService;
@@ -38,14 +39,25 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     @Override
     public MedicalRecordModel updateMedicalRecord(MedicalRecordModel medicalRecordModel) {
+        // Générer une exception
+        try {
+        MedicalRecordEntity existingMedicalRecord = medicalRecordRepository.findByLastName(medicalRecordModel.getLastName());
 
+        if (existingMedicalRecord == null) {
+            throw new MedicalRecordNotFoundException("Aucun carnet de santé n'a été trouvé à ce nom : " + medicalRecordModel.getLastName());
+        }
 
         MedicalRecordEntity medicalUpdate = medicalMapper.mapToMedicalRecordEntity(medicalRecordModel);
         medicalUpdate = medicalRecordRepository.updateMedicalRecord(medicalUpdate);
         MedicalRecordModel medicalReturn = medicalMapper.mapToMedicalRecordModel(medicalUpdate);
-        log.info("Le carnet de santé a bien été modifié !" );
+        log.info("Le carnet de santé a bien été modifié !");
         return medicalReturn;
+
+    } catch (MedicalRecordNotFoundException e) {
+        log.error("Une erreur s'est produite lors de la mise à jour : " + e);
+        throw e;
     }
+}
 
     
     @Override

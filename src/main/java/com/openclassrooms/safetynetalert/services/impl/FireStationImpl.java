@@ -3,6 +3,7 @@ package com.openclassrooms.safetynetalert.services.impl;
 import com.openclassrooms.safetynetalert.entity.FireStationEntity;
 import com.openclassrooms.safetynetalert.entity.PersonEntity;
 import com.openclassrooms.safetynetalert.entity.MedicalRecordEntity;
+import com.openclassrooms.safetynetalert.exception.FireStationNotFoundException;
 import com.openclassrooms.safetynetalert.mapper.FireStationMapper;
 import com.openclassrooms.safetynetalert.mapper.PersonMapper;
 import com.openclassrooms.safetynetalert.model.*;
@@ -62,8 +63,16 @@ public class FireStationImpl implements FireStationService {
 
     @Override
     public FireStationModel updateFireStation(FireStationModel fireStationModel) {
+        // Gestion d'une exception
+        try {
         FireStationEntity fireStationUpdate =
                 fireStationRepository.findByAddress(fireStationModel.getAddress());
+
+        // Si aucune adresse n'est retrouvée / création d'une exception
+        if (fireStationUpdate == null) {
+            throw new FireStationNotFoundException(" Il n'y a aucune caserne de pompier trouvée à l'adresse suivante : " + fireStationModel.getAddress());
+        }
+
         fireStationUpdate.setStation(fireStationModel.getStation());
         fireStationUpdate = fireStationRepository.updateFireStation(fireStationUpdate);
 
@@ -73,6 +82,11 @@ public class FireStationImpl implements FireStationService {
         // donc mapper mapToFireStationModel
         log.info("La caserne de pompier a bien été mise à jour !" );
         return stationUpdated;
+
+    } catch (FireStationNotFoundException e) {
+            log.error("Une erreur s'est produite lors de la mise à jour : " + e) ;
+            throw e;
+        }
     }
 
 
@@ -89,13 +103,7 @@ public class FireStationImpl implements FireStationService {
     }
 
     
-    /**
-     *   Renvoie la liste des personnes couvertes par la caserne de pompier
-     *   correspondante
-     *   
-     * @param stationNumber
-     * @return PersonFireStationModel
-     */
+
     //URL n°1 :  http://localhost:8080/firestation?stationNumber=<station_number>
     @Override
     public PersonFireStationModel getPersonCovertByFireStation(String stationNumber) {
@@ -146,15 +154,7 @@ public class FireStationImpl implements FireStationService {
     }
 
 
-    /**
-     *   URL n°3  http://localhost:8080/phoneAlert?firestation=<firestation_number>
-     *
-     *   Renvoie une liste des numéros de téléphone des habitants desservie
-     *   par la caserne de pompier correspondante
-     *   
-     * @param stationNumber
-     * @return List<String> 
-     */
+
     @Override
     public List<String> getPhoneAlert(String stationNumber) {
 
@@ -181,11 +181,7 @@ public class FireStationImpl implements FireStationService {
 
     
 
-    /**
-     *   Renvoie la liste des habitants vivant à une adresse donnée + num de la caserne
-     *   correspondante 
-     *
-     */
+
     // URL n°4 :http://localhost:8080/fire?address=<address>
     @Override
     public FireModel getFireMembersAddress(String address) {

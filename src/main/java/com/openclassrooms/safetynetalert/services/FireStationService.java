@@ -14,15 +14,39 @@ public interface FireStationService {
     FireStationModel updateFireStation(FireStationModel fireStationModel);
     
 
-    //URL n°1 :  http://localhost:8080/firestation?stationNumber=<station_number>
+    //URL n°1 :
+    /**
+     *   Renvoie la liste des personnes couvertes par la caserne de pompier
+     *   correspondante
+     *
+     * @param stationNumber
+     * @return PersonFireStationModel
+     */
     PersonFireStationModel getPersonCovertByFireStation(String stationNumber);
 
+
     //URL n°3 :
+    /**
+     *   Renvoie une liste des numéros de téléphone des habitants desservie
+     *   par la caserne de pompier correspondante
+     *
+     * @param stationNumber
+     * @return List<String>
+     */
     List<String> getPhoneAlert(String stationNumber);
 
+
     // URL n°4
+    /**
+     *   Renvoie la liste des habitants vivant à une adresse donnée + num de la caserne
+     *   correspondante
+     *
+     * @param address
+     * @return FireModel
+     */
     FireModel getFireMembersAddress(String address);
 
     Boolean deleteFireStation(String address);
     
 }
+  //javadoc 

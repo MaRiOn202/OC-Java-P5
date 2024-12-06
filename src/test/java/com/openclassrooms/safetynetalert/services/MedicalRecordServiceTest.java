@@ -117,7 +117,7 @@ public class MedicalRecordServiceTest {
         updatedModel.setMedications(List.of("aznol:350mg", "hydrapermazol:100mg"));
         updatedModel.setAllergies(List.of("nillacilan"));
 
-        when(medicalRecordRepository.findByLastNameAndFirstName("Cadigan","Eric")).thenReturn(medicalRecordEntity);
+//        when(medicalRecordRepository.findByLastNameAndFirstName("Cadigan","Eric")).thenReturn(medicalRecordEntity);
         when(medicalMapper.mapToMedicalRecordEntity(medicalRecordModel)).thenReturn(updatedEntity);
         when(medicalRecordRepository.updateMedicalRecord(updatedEntity)).thenReturn(updatedEntity);
         when(medicalMapper.mapToMedicalRecordModel(updatedEntity)).thenReturn(updatedModel);

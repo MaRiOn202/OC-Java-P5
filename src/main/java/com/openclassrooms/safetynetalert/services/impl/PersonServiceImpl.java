@@ -87,11 +87,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-    /**
-     *   Renvoie une liste d'enfants habitant à une adresse.
-     *   Nom + prénom + âge ainsi que la liste des autres membres du foyer.
-     *
-     */
+
     // URL n°2 : http://localhost:8080/childAlert?address=<address>
     @Override
     public List<ChildModel> getChildAlert(String address) {
@@ -143,11 +139,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-    /**
-     *   Renvoie la liste de tous les foyers desservis par une caserne.
-     *   Regroupe les personnes par adresse.
-     *
-     */
+
     // URL n°5 :   http://localhost:8080/flood/stations?stations=<a list of station_numbers>
    @Override
    public FloodModel getFlood(List<String> stationNumber) {
@@ -209,11 +201,7 @@ public class PersonServiceImpl implements PersonService {
    }
 
 
-    /**
-     *   Retourne le nom, l'adresse, l'âge, l'email et les antécédents médicaux de chaque habitant.
-     *   Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
-     *
-     */
+
     // URL n° 6 : http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
     @Override
     public List<PersonInfoModel> getPersonInfo(String lastName, String firstName) {
@@ -262,10 +250,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-    /**
-     *   Renvoie les adresses email de tous les habitants de la ville 
-     *
-     */
+
     // URL n° 7 :  http://localhost:8080/communityEmail?city=<city>
     @Override
     public List<String> getCommunityEmail(String city) {

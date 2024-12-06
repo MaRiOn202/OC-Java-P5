@@ -1,6 +1,7 @@
 package com.openclassrooms.safetynetalert.controller;
 
 
+import com.openclassrooms.safetynetalert.exception.MedicalRecordNotFoundException;
 import com.openclassrooms.safetynetalert.model.MedicalRecordModel;
 import com.openclassrooms.safetynetalert.services.MedicalRecordService;
 import lombok.AllArgsConstructor;
@@ -33,11 +34,13 @@ public class MedicalRecordController {
     @PutMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<MedicalRecordModel> updateMedicalRecord(
             @NotNull
-            @RequestBody MedicalRecordModel medicalRecordModel) {
-    log.info("URL : http://localhost:8080/medicalRecord?medicalRecordModel="+medicalRecordModel);
+            @RequestBody MedicalRecordModel medicalRecordModel) throws MedicalRecordNotFoundException {
+
+        log.info("URL : http://localhost:8080/medicalRecord?medicalRecordModel="+medicalRecordModel);
         medicalRecordService.updateMedicalRecord(medicalRecordModel);
         return new ResponseEntity<>(medicalRecordModel, HttpStatus.OK);
     }
+
     
     @DeleteMapping(value = "/medicalRecord", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<Boolean> deleteMedicalRecord(@RequestParam(name = "lastName") String lastName,
